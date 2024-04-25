@@ -1,6 +1,6 @@
-import { TaskType } from "../lib/features/tasks/tasksSlice";
-import { selectVisualization } from "../lib/features/visualization/visualizationSlice";
+import { TaskType, selectTasks } from "../lib/features/tasks/tasksSlice";
 import { useAppSelector } from "../lib/hooks";
+import { getVisualContainers } from "../lib/features/visualization/visualTasks";
 
 interface VisualItemProps {
     unitValue: string;
@@ -17,7 +17,7 @@ const VisualCardItem = ({ unitValue, tasks }: VisualItemProps) => {
                 {tasks.map((tks) => (
                     <li
                         key={tks._id}
-                        className="border-b-[1px] border-neutral-400 py-4"
+                        className="border-b-[1px] border-neutral-50 py-4 bg-neutral-400 text-neutral-50 px-4"
                     >
                         <strong className="text-lg block font-normal">
                             {tks.title}
@@ -30,13 +30,22 @@ const VisualCardItem = ({ unitValue, tasks }: VisualItemProps) => {
 };
 
 export default function AllTasksVisualContent() {
-    const { containers, modeLabel } = useAppSelector(selectVisualization);
+    const { visual, taskList } = useAppSelector(selectTasks);
+
+    const visualResponse = getVisualContainers(
+        visual.year,
+        visual.month,
+        taskList.others,
+        visual.mode,
+    );
 
     return (
         <section className="w-full flex flex-col gap-8 h-fit py-16">
-            <h2 className="text-2xl text-neutral-600">{modeLabel}</h2>
-            {containers.length > 0 &&
-                containers.map((cont) => (
+            <h2 className="text-2xl text-neutral-600">
+                {visualResponse.modeLabel}
+            </h2>
+            {visualResponse.containers.length > 0 &&
+                visualResponse.containers.map((cont) => (
                     <VisualCardItem
                         key={cont.label}
                         tasks={cont.tasks}

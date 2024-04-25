@@ -1,5 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
+import { dateEquals } from "../../../utils/dateUtils";
 
 export interface TaskType {
     _id: string;
@@ -10,12 +11,25 @@ export interface TaskType {
     endsAt: string;
 }
 
+export enum EVisualMode {
+    DAY,
+    WEEK,
+    MONTH,
+}
+
+interface VisualType {
+    mode: EVisualMode;
+    year: number;
+    month: number;
+}
+
 interface StateType {
     taskList: {
         today: TaskType[];
         others: TaskType[];
     };
     currentPage: number;
+    visual: VisualType;
 }
 
 const initialState: StateType = {
@@ -54,6 +68,11 @@ const initialState: StateType = {
     },
 
     currentPage: 1,
+    visual: {
+        mode: EVisualMode.DAY,
+        year: 2024,
+        month: 3,
+    },
 };
 
 const tasksSlice = createSlice({
@@ -63,9 +82,42 @@ const tasksSlice = createSlice({
         goToPage(state, action: PayloadAction<number>) {
             state.currentPage = action.payload;
         },
+
+        setFullVisual(state, action: PayloadAction<VisualType>) {
+            state.visual = { ...action.payload };
+        },
+
+        setVisualMode(state, action: PayloadAction<EVisualMode>) {
+            state.visual.mode = action.payload;
+        },
+
+        setTasks(
+            state,
+            action: PayloadAction<{
+                year: number;
+                month: number;
+                tasks: TaskType[];
+            }>,
+        ) {
+            const { year, month, tasks } = action.payload;
+
+            const now = new Date();
+            const todayTks: TaskType[] = [];
+            const otherTks: TaskType[] = [];
+
+            tasks.forEach((tks) => {
+                if (dateEquals(now, new Date(tks.startsAt))) todayTks.push(tks);
+                else otherTks.push(tks);
+            });
+
+            state.visual.year = year;
+            state.visual.month = month;
+            state.taskList.today = [...todayTks];
+            state.taskList.others = [...otherTks];
+        },
     },
 });
 
-export const { goToPage } = tasksSlice.actions;
+export const { goToPage, setTasks, setVisualMode } = tasksSlice.actions;
 export const selectTasks = (store: RootState) => store.tasks;
 export default tasksSlice.reducer;

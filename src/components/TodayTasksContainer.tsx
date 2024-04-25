@@ -1,16 +1,14 @@
 import PaginationControl from "./PaginationControl";
 import SearchBar from "./SearchBar";
-import TaskDayContent from "./TaskDayContent";
+import TodayTasksContent from "./TodayTasksContent";
 
-export default function TaskDayContainer() {
-    const searchTask = async (query: string) => {
-        console.log(new Date());
-    };
+export default function TodayContainer() {
+    const searchTask = async (query: string) => {};
 
     return (
         <article className="bg-neutral-50 py-2 px-4 w-full flex-wrap">
             <SearchBar handleSearch={searchTask} />
-            <TaskDayContent />
+            <TodayTasksContent />
             <PaginationControl />
         </article>
     );

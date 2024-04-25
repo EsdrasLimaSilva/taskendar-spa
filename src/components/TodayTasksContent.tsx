@@ -2,7 +2,7 @@ import { selectTasks } from "../lib/features/tasks/tasksSlice";
 import { useAppSelector } from "../lib/hooks";
 import TaskCard from "./TaskCard";
 
-export default function TaskDayContent() {
+export default function TodayTasksContainer() {
     const { taskList, currentPage } = useAppSelector(selectTasks);
 
     return (
