@@ -30,18 +30,19 @@ const VisualCardItem = ({ unitValue, tasks }: VisualItemProps) => {
 };
 
 export default function AllTasksVisualContent() {
-    const { containers } = useAppSelector(selectVisualization);
+    const { containers, modeLabel } = useAppSelector(selectVisualization);
 
     return (
         <section className="w-full flex flex-col gap-8 h-fit py-16">
-            <h2 className="text-2xl text-neutral-600">Todos os Dias</h2>
-            {containers.map((cont) => (
-                <VisualCardItem
-                    key={cont.label}
-                    tasks={cont.tasks}
-                    unitValue={cont.label}
-                />
-            ))}
+            <h2 className="text-2xl text-neutral-600">{modeLabel}</h2>
+            {containers.length > 0 &&
+                containers.map((cont) => (
+                    <VisualCardItem
+                        key={cont.label}
+                        tasks={cont.tasks}
+                        unitValue={cont.label}
+                    />
+                ))}
         </section>
     );
 }

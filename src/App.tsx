@@ -4,7 +4,11 @@ import Admin from "./pages/Admin";
 import { TaskType } from "./lib/features/tasks/tasksSlice";
 import { useAppDispatch } from "./lib/hooks";
 import { useEffect } from "react";
-import { setModeToDay } from "./lib/features/visualization/visualizationSlice";
+import {
+    setModeToDay,
+    setModeToMonth,
+    setModeToWeek,
+} from "./lib/features/visualization/visualizationSlice";
 
 const initialTasks: TaskType[] = [
     {
@@ -23,6 +27,14 @@ const initialTasks: TaskType[] = [
         description: "Read through the project proposal and provide feedback.",
         startsAt: "2024-04-25T13:19:33.281Z",
         endsAt: "2024-07-10T11:00:00.571Z",
+    },
+    {
+        _id: "task3",
+        uid: "kdaçeunsl-dkaajo",
+        title: "Write a book",
+        description: "Read through the project proposal and provide feedback.",
+        startsAt: "2024-04-27T13:19:33.281Z",
+        endsAt: "2024-04-28T11:00:00.571Z",
     },
 ];
 
