@@ -4,6 +4,7 @@ import {
     dateEquals,
     dateIsInInterval,
     getLastDay,
+    getMonthName,
     getWeekBoundaries,
     getWeeks,
 } from "../../../utils/dateUtils";
@@ -58,6 +59,7 @@ const visualizationSlice = createSlice({
             }
 
             state.containers = [...containers];
+            state.mode = "DAY";
             state.modeLabel = "Todos os dias";
         },
 
@@ -95,6 +97,7 @@ const visualizationSlice = createSlice({
             });
 
             state.containers = [...containers];
+            state.mode = "WEEK";
             state.modeLabel = "Todas as Semanas";
         },
 
@@ -102,7 +105,7 @@ const visualizationSlice = createSlice({
             const { year, month, tasks } = action.payload;
             const containers: VisualContainerType[] = [
                 {
-                    label: (month + 1).toString().padStart(2, "0"),
+                    label: getMonthName(month),
                     stDate: new Date(year, month).toISOString(),
                     ndDate: new Date(year, month).toISOString(),
                     tasks: tasks.filter((tks) =>
@@ -116,6 +119,8 @@ const visualizationSlice = createSlice({
             ];
 
             state.containers = [...containers];
+            state.mode = "MONTH";
+            state.modeLabel = "Tarefas do mês";
         },
     },
 });

@@ -21,7 +21,36 @@ interface StateType {
 const initialState: StateType = {
     taskList: {
         today: [],
-        others: [],
+        others: [
+            {
+                _id: "task1",
+                uid: "kdaçeunsl-dkaajo",
+                title: "Review Project Proposal",
+                description:
+                    "Read through the project proposal and provide feedback.",
+                startsAt: "2024-04-25T13:19:33.281Z",
+                endsAt: "2024-07-10T11:00:00.571Z",
+            },
+
+            {
+                _id: "task2",
+                uid: "kdaçeunsl-dkaajo",
+                title: "Conclude the project",
+                description:
+                    "Read through the project proposal and provide feedback.",
+                startsAt: "2024-04-25T13:19:33.281Z",
+                endsAt: "2024-07-10T11:00:00.571Z",
+            },
+            {
+                _id: "task3",
+                uid: "kdaçeunsl-dkaajo",
+                title: "Write a book",
+                description:
+                    "Read through the project proposal and provide feedback.",
+                startsAt: "2024-04-27T13:19:33.281Z",
+                endsAt: "2024-04-28T11:00:00.571Z",
+            },
+        ],
     },
 
     currentPage: 1,

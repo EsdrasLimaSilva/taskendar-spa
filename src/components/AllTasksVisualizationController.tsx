@@ -1,4 +1,12 @@
 import { ButtonHTMLAttributes, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../lib/hooks";
+import {
+    selectVisualization,
+    setModeToDay,
+    setModeToMonth,
+    setModeToWeek,
+} from "../lib/features/visualization/visualizationSlice";
+import { selectTasks } from "../lib/features/tasks/tasksSlice";
 
 interface RadioInputProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     label: string;
@@ -17,26 +25,50 @@ function SelectButton({ label, ...rest }: RadioInputProps) {
 }
 
 export default function AllTasksVisualizationController() {
-    const [visualizationType, setVisualizationType] = useState<"M" | "D" | "W">(
-        "D",
-    );
+    const { taskList } = useAppSelector(selectTasks);
+    const { mode } = useAppSelector(selectVisualization);
+    const dispatch = useAppDispatch();
 
     return (
         <form className="flex items-center justify-between max-w-[600px] mx-auto">
             <SelectButton
                 label="Dia"
-                onClick={() => setVisualizationType("D")}
-                disabled={visualizationType == "D"}
+                onClick={() =>
+                    dispatch(
+                        setModeToDay({
+                            year: 2024,
+                            month: 3,
+                            tasks: taskList.others,
+                        }),
+                    )
+                }
+                disabled={mode == "DAY"}
             />
             <SelectButton
                 label="Semana"
-                onClick={() => setVisualizationType("W")}
-                disabled={visualizationType == "W"}
+                onClick={() =>
+                    dispatch(
+                        setModeToWeek({
+                            year: 2024,
+                            month: 3,
+                            tasks: taskList.others,
+                        }),
+                    )
+                }
+                disabled={mode == "WEEK"}
             />
             <SelectButton
                 label="Mês"
-                onClick={() => setVisualizationType("M")}
-                disabled={visualizationType == "M"}
+                onClick={() =>
+                    dispatch(
+                        setModeToMonth({
+                            year: 2024,
+                            month: 3,
+                            tasks: taskList.others,
+                        }),
+                    )
+                }
+                disabled={mode == "MONTH"}
             />
         </form>
     );
