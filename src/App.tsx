@@ -4,8 +4,10 @@ import Admin from "./pages/Admin";
 import { useEffect } from "react";
 import { useAppDispatch } from "./lib/hooks";
 import { fetchTasks } from "./lib/features/tasks/tasksSlice";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function App() {
+    const { user } = useAuth0();
     const dispatch = useAppDispatch();
 
     const getInitialTasks = async () => {
@@ -14,7 +16,7 @@ export default function App() {
 
     // fetching Initial tasks
     useEffect(() => {
-        getInitialTasks();
+        if (user) getInitialTasks();
     }, []);
 
     return (
