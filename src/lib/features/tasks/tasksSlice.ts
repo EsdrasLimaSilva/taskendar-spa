@@ -31,6 +31,10 @@ interface StateType {
     };
     currentPage: number;
     visual: VisualType;
+    targetEditTask: TaskType | null;
+    editModal: {
+        visible: boolean;
+    };
 }
 
 // async thunk to get tasks
@@ -75,6 +79,11 @@ const initialState: StateType = {
         year: 2024,
         month: 3,
     },
+
+    targetEditTask: null,
+    editModal: {
+        visible: false,
+    },
 };
 
 const tasksSlice = createSlice({
@@ -117,6 +126,25 @@ const tasksSlice = createSlice({
             state.taskList.today = [...todayTks];
             state.taskList.others = [...otherTks];
         },
+
+        setTargetEditTask(state, action: PayloadAction<string>) {
+            const taskTarget = [
+                ...state.taskList.today,
+                ...state.taskList.others,
+            ].find((tsk) => tsk._id === action.payload);
+
+            state.targetEditTask = taskTarget || null;
+        },
+
+        setTaskInfo(state, action: PayloadAction<{ task: TaskType }>) {},
+
+        setEditModalVisible(state) {
+            state.editModal.visible = true;
+        },
+
+        setEditModalHidden(state) {
+            state.editModal.visible = false;
+        },
     },
 
     extraReducers: (builder) => {
@@ -141,6 +169,15 @@ const tasksSlice = createSlice({
     },
 });
 
-export const { goToPage, setTasks, setVisualMode } = tasksSlice.actions;
+export const {
+    goToPage,
+    setTasks,
+    setVisualMode,
+    setTaskInfo,
+    setTargetEditTask,
+    setEditModalVisible,
+    setEditModalHidden,
+    setFullVisual,
+} = tasksSlice.actions;
 export const selectTasks = (store: RootState) => store.tasks;
 export default tasksSlice.reducer;

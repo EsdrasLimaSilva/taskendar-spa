@@ -28,12 +28,33 @@ export function getLastDay(year: number, month: number) {
     return lastDay;
 }
 
+/**
+ * Compares Two dates
+ * @returns 1 if date1 > date2
+ * @returns -1 if date1 < date2
+ * @returns 0 if date1 == date2
+ */
+export function dateCompare(date1: Date, date2: Date) {
+    console.log(date1);
+    console.log(date2);
+    return date1.getMilliseconds() - date2.getMilliseconds();
+}
+
+export function toStringYYYMMDD(date: Date) {
+    return `${date.getFullYear()}-${(date.getMonth() + 1)
+        .toString()
+        .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+}
+
+export function toStringTimeHHMM(date: Date) {
+    return `${date.getHours().toString().padStart(2, "0")}:${date
+        .getMinutes()
+        .toString()
+        .padStart(2, "0")}`;
+}
+
 export function dateEquals(date1: Date, date2: Date) {
-    return (
-        date1.getFullYear() === date2.getFullYear() &&
-        date1.getMonth() === date2.getMonth() &&
-        date1.getDate() == date2.getDate()
-    );
+    return date1 == date2;
 }
 
 export function getWeeks(
@@ -85,14 +106,7 @@ export function dateIsInInterval(
     pastDate: Date,
     futureDate: Date,
 ) {
-    return (
-        target.getFullYear() >= pastDate.getFullYear() &&
-        target.getMonth() >= pastDate.getMonth() &&
-        target.getDate() >= pastDate.getDate() &&
-        target.getFullYear() <= futureDate.getFullYear() &&
-        target.getMonth() <= futureDate.getMonth() &&
-        target.getDate() <= futureDate.getDate()
-    );
+    return target >= pastDate && target <= futureDate;
 }
 
 export function getMonthName(monthIndex: number) {
