@@ -1,6 +1,6 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
-import { dateEquals } from "../../../utils/dateUtils";
+import { dateEquals, dateIsToday } from "../../../utils/dateUtils";
 import { v4 as uuid } from "uuid";
 
 export interface TaskType {
@@ -90,18 +90,6 @@ const tasksSlice = createSlice({
     name: "tasks",
     initialState,
     reducers: {
-        goToPage(state, action: PayloadAction<number>) {
-            state.currentPage = action.payload;
-        },
-
-        setFullVisual(state, action: PayloadAction<VisualType>) {
-            state.visual = { ...action.payload };
-        },
-
-        setVisualMode(state, action: PayloadAction<EVisualMode>) {
-            state.visual.mode = action.payload;
-        },
-
         setTasks(
             state,
             action: PayloadAction<{
@@ -112,19 +100,31 @@ const tasksSlice = createSlice({
         ) {
             const { year, month, tasks } = action.payload;
 
-            const now = new Date();
             const todayTks: TaskType[] = [];
             const otherTks: TaskType[] = [];
 
             tasks.forEach((tks) => {
-                if (dateEquals(now, new Date(tks.startsAt))) todayTks.push(tks);
-                else otherTks.push(tks);
+                if (dateIsToday(new Date(tks.startsAt))) {
+                    todayTks.push(tks);
+                } else otherTks.push(tks);
             });
 
             state.visual.year = year;
             state.visual.month = month;
             state.taskList.today = [...todayTks];
             state.taskList.others = [...otherTks];
+        },
+
+        goToPage(state, action: PayloadAction<number>) {
+            state.currentPage = action.payload;
+        },
+
+        setFullVisual(state, action: PayloadAction<VisualType>) {
+            state.visual = { ...action.payload };
+        },
+
+        setVisualMode(state, action: PayloadAction<EVisualMode>) {
+            state.visual.mode = action.payload;
         },
 
         setTargetEditTask(state, action: PayloadAction<string>) {
@@ -156,8 +156,7 @@ const tasksSlice = createSlice({
 
             // organizing all tasks into today and others
             allTasks.forEach((tsk) => {
-                if (dateEquals(currentDate, new Date(tsk.startsAt)))
-                    todayTks.push(tsk);
+                if (dateIsToday(new Date(tsk.startsAt))) todayTks.push(tsk);
                 else otherTks.push(tsk);
             });
 

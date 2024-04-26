@@ -57,6 +57,15 @@ export function dateEquals(date1: Date, date2: Date) {
     return date1 == date2;
 }
 
+export function dateIsToday(date1: Date) {
+    const currentDate = new Date();
+    return (
+        currentDate.getFullYear() === date1.getFullYear() &&
+        currentDate.getMonth() === date1.getMonth() &&
+        currentDate.getDate() === date1.getDate()
+    );
+}
+
 export function getWeeks(
     year: number,
     month: number,
