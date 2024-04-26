@@ -1,6 +1,7 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
 import { dateEquals } from "../../../utils/dateUtils";
+import { v4 as uuid } from "uuid";
 
 export interface TaskType {
     _id: string;
@@ -32,39 +33,40 @@ interface StateType {
     visual: VisualType;
 }
 
+// async thunk to get tasks
+export const fetchTasks = createAsyncThunk("tasks/fetchTasks", async () => {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+
+    // creating randomized tasks
+    const randomTasks: TaskType[] = [];
+    for (let i = 0; i < 10; i++) {
+        let stDt = new Date(year, month, Math.round(Math.random() * 20));
+
+        if (i < 3) stDt = new Date();
+
+        randomTasks.push({
+            _id: uuid(),
+            description: "Random description for task " + (i + 1),
+            startsAt: stDt.toISOString(),
+            endsAt: new Date(
+                stDt.getFullYear(),
+                stDt.getMonth(),
+                stDt.getDate() + Math.round(Math.random() * 2) + 1,
+            ).toISOString(),
+            title: "Random title for task " + (i + 1),
+            uid: uuid(),
+        });
+    }
+
+    return randomTasks;
+});
+
 const initialState: StateType = {
     taskList: {
         today: [],
-        others: [
-            {
-                _id: "task1",
-                uid: "kdaçeunsl-dkaajo",
-                title: "Review Project Proposal",
-                description:
-                    "Read through the project proposal and provide feedback.",
-                startsAt: "2024-04-25T13:19:33.281Z",
-                endsAt: "2024-07-10T11:00:00.571Z",
-            },
-
-            {
-                _id: "task2",
-                uid: "kdaçeunsl-dkaajo",
-                title: "Conclude the project",
-                description:
-                    "Read through the project proposal and provide feedback.",
-                startsAt: "2024-04-25T13:19:33.281Z",
-                endsAt: "2024-07-10T11:00:00.571Z",
-            },
-            {
-                _id: "task3",
-                uid: "kdaçeunsl-dkaajo",
-                title: "Write a book",
-                description:
-                    "Read through the project proposal and provide feedback.",
-                startsAt: "2024-04-27T13:19:33.281Z",
-                endsAt: "2024-04-28T11:00:00.571Z",
-            },
-        ],
+        others: [],
     },
 
     currentPage: 1,
@@ -115,6 +117,27 @@ const tasksSlice = createSlice({
             state.taskList.today = [...todayTks];
             state.taskList.others = [...otherTks];
         },
+    },
+
+    extraReducers: (builder) => {
+        builder.addCase(fetchTasks.fulfilled, (state, action) => {
+            const allTasks = [...action.payload];
+            const currentDate = new Date();
+            const todayTks: TaskType[] = [];
+            const otherTks: TaskType[] = [];
+
+            // organizing all tasks into today and others
+            allTasks.forEach((tsk) => {
+                if (dateEquals(currentDate, new Date(tsk.startsAt)))
+                    todayTks.push(tsk);
+                else otherTks.push(tsk);
+            });
+
+            state.visual.year = currentDate.getFullYear();
+            state.visual.month = currentDate.getMonth();
+            state.taskList.today = [...todayTks];
+            state.taskList.others = [...otherTks];
+        });
     },
 });
 
