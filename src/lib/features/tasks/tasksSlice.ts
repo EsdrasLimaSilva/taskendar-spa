@@ -1,7 +1,7 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
 import { dateIsToday } from "../../../utils/dateUtils";
-import { createTask, getTasks } from "../../../utils/apiUtils";
+import { createTask, getTasks, updateTask } from "../../../utils/apiUtils";
 
 /*============ Types ============*/
 export interface CreateTaskType {
@@ -87,9 +87,9 @@ export const createTaskThunk = createAsyncThunk(
 
 export const updateTaskThunk = createAsyncThunk(
     "tasks/updateTask",
-    async ({ task, token }: { task: CreateTaskType; token: string }) => {
-        console.log("Updating a new TASK");
-        console.log(task);
+    async ({ task, token }: { task: UpdateTaskType; token: string }) => {
+        const updatedTask = await updateTask(task, token);
+        return updatedTask;
     },
 );
 
@@ -182,6 +182,7 @@ const tasksSlice = createSlice({
             state.taskList.today = [...todayTks];
             state.taskList.others = [...otherTks];
         });
+
         //create task
         builder.addCase(createTaskThunk.fulfilled, (state, action) => {
             const createdTask = action.payload;
@@ -191,6 +192,23 @@ const tasksSlice = createSlice({
                     state.taskList.today.push(createdTask);
                 } else {
                     state.taskList.others.push(createdTask);
+                }
+            }
+        });
+        // update task
+        builder.addCase(updateTaskThunk.fulfilled, (state, action) => {
+            const updatedTask = action.payload;
+            if (updatedTask) {
+                if (dateIsToday(new Date(updatedTask?.startsAt!))) {
+                    const taskIndex = state.taskList.today.findIndex(
+                        (task) => task._id === updatedTask._id,
+                    );
+                    state.taskList.today[taskIndex] = updatedTask;
+                } else {
+                    const taskIndex = state.taskList.others.findIndex(
+                        (task) => task._id === updatedTask._id,
+                    );
+                    state.taskList.others[taskIndex] = updatedTask;
                 }
             }
         });

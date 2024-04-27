@@ -1,7 +1,6 @@
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 import {
     CreateTaskType,
-    TaskType,
     UpdateTaskType,
     createTaskThunk,
     selectTasks,
@@ -11,12 +10,10 @@ import {
 import { useAppDispatch, useAppSelector } from "../lib/hooks";
 import FormLabel from "./FormLabel";
 import { toStringTimeHHMM, toStringYYYMMDD } from "../utils/dateUtils";
-import { v4 as uuid } from "uuid";
 import { useAuth0 } from "@auth0/auth0-react";
 
 export default function AdminEditTaskModal() {
-    const { user, isAuthenticated, getIdTokenClaims, getAccessTokenSilently } =
-        useAuth0();
+    const { getAccessTokenSilently } = useAuth0();
     const dispatch = useAppDispatch();
 
     const { targetEditTask, userRegistered } = useAppSelector(selectTasks);
