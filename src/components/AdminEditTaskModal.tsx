@@ -8,8 +8,11 @@ import { useAppDispatch, useAppSelector } from "../lib/hooks";
 import FormLabel from "./FormLabel";
 import { toStringTimeHHMM, toStringYYYMMDD } from "../utils/dateUtils";
 import { v4 as uuid } from "uuid";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function AdminEditTaskModal() {
+    const { user, isAuthenticated, getIdTokenClaims, getAccessTokenSilently } =
+        useAuth0();
     const dispatch = useAppDispatch();
 
     const { targetEditTask, editModal } = useAppSelector(selectTasks);
@@ -64,6 +67,8 @@ export default function AdminEditTaskModal() {
             endsAt: tskEndDate.toISOString(),
             uid: "",
         };
+
+        const token = await getAccessTokenSilently();
 
         if (targetEditTask?._id) {
             // it should update a existing task

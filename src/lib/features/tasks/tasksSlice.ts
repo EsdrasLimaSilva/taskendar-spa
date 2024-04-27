@@ -1,6 +1,6 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
-import { dateEquals, dateIsToday } from "../../../utils/dateUtils";
+import { dateIsToday } from "../../../utils/dateUtils";
 import { v4 as uuid } from "uuid";
 
 export interface TaskType {
@@ -35,6 +35,7 @@ interface StateType {
     editModal: {
         visible: boolean;
     };
+    userRegistered: boolean;
 }
 
 // async thunk to get tasks
@@ -84,6 +85,8 @@ const initialState: StateType = {
     editModal: {
         visible: false,
     },
+
+    userRegistered: false,
 };
 
 const tasksSlice = createSlice({
@@ -114,6 +117,8 @@ const tasksSlice = createSlice({
             state.taskList.today = [...todayTks];
             state.taskList.others = [...otherTks];
         },
+
+        setNewTask(state, action: PayloadAction<TaskType>) {},
 
         goToPage(state, action: PayloadAction<number>) {
             state.currentPage = action.payload;
@@ -147,6 +152,10 @@ const tasksSlice = createSlice({
             state.editModal.visible = false;
             document.body.style.overflow = "auto";
         },
+
+        setUserRegistered(state, action: PayloadAction<boolean>) {
+            state.userRegistered = action.payload;
+        },
     },
 
     extraReducers: (builder) => {
@@ -179,6 +188,8 @@ export const {
     setEditModalVisible,
     setEditModalHidden,
     setFullVisual,
+    setNewTask,
+    setUserRegistered,
 } = tasksSlice.actions;
 export const selectTasks = (store: RootState) => store.tasks;
 export default tasksSlice.reducer;

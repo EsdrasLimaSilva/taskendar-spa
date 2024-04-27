@@ -11,6 +11,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         authorizationParams={{
             redirect_uri: window.location.origin,
             scope: "read:current_user",
+            audience: import.meta.env.VITE_AUTH0_AUDIENCE,
         }}
         cacheLocation="localstorage"
     >
