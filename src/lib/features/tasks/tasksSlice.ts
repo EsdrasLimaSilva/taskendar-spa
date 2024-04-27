@@ -67,11 +67,44 @@ const initialState: StateType = {
     userRegistered: false,
 };
 /*============ Async Thunks ============*/
-// async thunk to get tasks
-export const fetchTasks = createAsyncThunk(
-    "tasks/fetchTasks",
+
+/**
+ * This Async thnk fetchs all tasks in the repository.
+ * @important Both today tasks and other tasks state will be updated!
+ */
+export const fetchTasksThunk = createAsyncThunk(
+    "tasks/fetchTasksThunk",
+    async ({ targetDate, token }: { targetDate?: Date; token: string }) => {
+        const date = new Date();
+        const month = date.getMonth() + 1;
+        const year = date.getFullYear();
+        const tasks: TaskType[] = await getTasks(month, year, token);
+        return tasks;
+    },
+);
+
+export const fetchTodayTasksThunk = createAsyncThunk(
+    "tasks/fetchTodayTasks",
     async (token: string) => {
-        const tasks: TaskType[] = await getTasks(token);
+        const date = new Date();
+        const month = date.getMonth() + 1;
+        const year = date.getFullYear();
+        const tasks: TaskType[] = await getTasks(month, year, token);
+        return tasks;
+    },
+);
+
+// get all tasks that are not for today
+export const fetchOtherTasksThunk = createAsyncThunk(
+    "tasks/fetchOtherTasks",
+    async ({ targetDate, token }: { targetDate?: Date; token: string }) => {
+        const otherDate = new Date();
+
+        const date = targetDate || otherDate;
+        const month = date.getMonth() + 1;
+        const year = date.getFullYear();
+
+        const tasks: TaskType[] = await getTasks(month, year, token);
         return tasks;
     },
 );
@@ -123,8 +156,6 @@ const tasksSlice = createSlice({
             state.taskList.others = [...otherTks];
         },
 
-        setNewTask(state, action: PayloadAction<TaskType>) {},
-
         goToPage(state, action: PayloadAction<number>) {
             state.currentPage = action.payload;
         },
@@ -133,8 +164,18 @@ const tasksSlice = createSlice({
             state.visual = { ...action.payload };
         },
 
-        setVisualMode(state, action: PayloadAction<EVisualMode>) {
-            state.visual.mode = action.payload;
+        setOtherVisualization(
+            state,
+            action: PayloadAction<{
+                mode: EVisualMode;
+                year?: number;
+                month?: number;
+            }>,
+        ) {
+            const { mode, year, month } = action.payload;
+            state.visual.mode = mode;
+            state.visual.year = year || state.visual.year;
+            state.visual.month = month || state.visual.month;
         },
 
         setTargetEditTask(state, action: PayloadAction<string>) {
@@ -145,8 +186,6 @@ const tasksSlice = createSlice({
 
             state.targetEditTask = taskTarget || null;
         },
-
-        setTaskInfo(state, action: PayloadAction<{ task: TaskType }>) {},
 
         setEditModalVisible(state) {
             state.editModal.visible = true;
@@ -165,7 +204,7 @@ const tasksSlice = createSlice({
 
     extraReducers: (builder) => {
         // fetch tasks
-        builder.addCase(fetchTasks.fulfilled, (state, action) => {
+        builder.addCase(fetchTasksThunk.fulfilled, (state, action) => {
             const allTasks = [...action.payload]; // retrieved via async thunk
             const currentDate = new Date();
             const todayTks: TaskType[] = [];
@@ -181,6 +220,18 @@ const tasksSlice = createSlice({
             state.visual.month = currentDate.getMonth();
             state.taskList.today = [...todayTks];
             state.taskList.others = [...otherTks];
+        });
+
+        // handle today tasks fetching
+        builder.addCase(fetchTodayTasksThunk.fulfilled, (state, action) => {
+            const tasks = action.payload;
+            state.taskList.today = [...tasks];
+        });
+
+        // handle other tasks fetching
+        builder.addCase(fetchOtherTasksThunk.fulfilled, (state, action) => {
+            const tasks = action.payload;
+            state.taskList.others = [...tasks];
         });
 
         //create task
@@ -218,13 +269,11 @@ const tasksSlice = createSlice({
 export const {
     goToPage,
     setTasks,
-    setVisualMode,
-    setTaskInfo,
+    setOtherVisualization,
     setTargetEditTask,
     setEditModalVisible,
     setEditModalHidden,
     setFullVisual,
-    setNewTask,
     setUserRegistered,
 } = tasksSlice.actions;
 export const selectTasks = (store: RootState) => store.tasks;

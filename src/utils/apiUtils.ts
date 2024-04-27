@@ -12,13 +12,24 @@ async function fetchApi(path: string, requestInit?: RequestInit) {
     return data;
 }
 
-export async function getTasks(token: string) {
-    const data = await fetchApi("/tasks", {
+export async function getTasks(
+    month: number,
+    year: number,
+    token: string,
+    parameters: { page: number; limit: number } = { page: 1, limit: 20 },
+) {
+    // mounting query params if exists
+    const queryParams = new URLSearchParams();
+    parameters.page && queryParams.set("page", String(parameters.page));
+    parameters.limit && queryParams.set("limit", String(parameters.limit));
+
+    const data = await fetchApi("/tasks?" + queryParams.toString(), {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
-            startdate: new Date().toISOString(),
+            month: String(month),
+            year: String(year),
         },
     });
 
