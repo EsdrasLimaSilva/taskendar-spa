@@ -40,7 +40,7 @@ export default function AllTasksVisualContent() {
     );
 
     return (
-        <section className="w-full flex flex-col gap-8 h-fit py-16">
+        <section className="w-full flex flex-col gap-8 h-fit py-16 max-w-lg mx-auto">
             <h2 className="text-2xl text-neutral-600">
                 {visualResponse.modeLabel}
             </h2>

@@ -18,7 +18,7 @@ export default function SearchBar({ handleSearch }: Props) {
 
     return (
         <form
-            className="w-full flex align-center justify-between overflow-clip border-[1px]  border-neutral-600 rounded-full max-w-[600px]"
+            className="w-full flex align-center justify-between overflow-clip border-[1px]  border-neutral-600 rounded-full max-w-[600px] mx-auto"
             onSubmit={handleSubmit}
         >
             <input
