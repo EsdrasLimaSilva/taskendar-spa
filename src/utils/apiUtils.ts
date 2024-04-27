@@ -1,4 +1,8 @@
-import { CreateTaskType, TaskType } from "../lib/features/tasks/tasksSlice";
+import {
+    CreateTaskType,
+    TaskType,
+    UpdateTaskType,
+} from "../lib/features/tasks/tasksSlice";
 
 const BASE_URL = "http://localhost:3333";
 
@@ -53,6 +57,22 @@ export async function createTask(
 ): Promise<TaskType | null> {
     const data = await fetchApi("/tasks", {
         method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(task),
+    });
+
+    return data.data.task;
+}
+
+export async function updateTask(
+    task: UpdateTaskType,
+    token: string,
+): Promise<TaskType | null> {
+    const data = await fetchApi("/tasks", {
+        method: "PUT",
         headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
