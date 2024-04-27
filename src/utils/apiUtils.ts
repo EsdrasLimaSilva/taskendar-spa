@@ -3,13 +3,17 @@ import {
     TaskType,
     UpdateTaskType,
 } from "../lib/features/tasks/tasksSlice";
+import { ApiResponseType } from "./apiResponseType";
 
 const BASE_URL = "http://localhost:3333";
 
-async function fetchApi(path: string, requestInit?: RequestInit) {
+async function fetchApi(
+    path: string,
+    requestInit?: RequestInit,
+): Promise<ApiResponseType> {
     const response = await fetch(`${BASE_URL}${path}`, requestInit);
-    const data = response.json();
-    return data;
+    const apiResponse = response.json();
+    return apiResponse;
 }
 
 export async function getTasks(
@@ -23,7 +27,7 @@ export async function getTasks(
     parameters.page && queryParams.set("page", String(parameters.page));
     parameters.limit && queryParams.set("limit", String(parameters.limit));
 
-    const data = await fetchApi("/tasks?" + queryParams.toString(), {
+    const apiResponse = await fetchApi("/tasks?" + queryParams.toString(), {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -33,25 +37,25 @@ export async function getTasks(
         },
     });
 
-    return [...data.data.tasks];
+    return [...apiResponse.data.tasks];
 }
 
 export async function getUserData(token: string) {
-    const data = await fetchApi("/users", {
+    const apiResponse = await fetchApi("/users", {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
         },
     });
-    return data.ok ? data.data : null;
+    return apiResponse.ok ? apiResponse.data : null;
 }
 
 export async function registerUser(
     username: string,
     token: string,
 ): Promise<boolean> {
-    const data = await fetchApi("/users", {
+    const apiResponse = await fetchApi("/users", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -59,14 +63,14 @@ export async function registerUser(
         },
         body: JSON.stringify({ username }),
     });
-    return data.ok;
+    return apiResponse.ok;
 }
 
 export async function createTask(
     task: CreateTaskType,
     token: string,
 ): Promise<TaskType | null> {
-    const data = await fetchApi("/tasks", {
+    const apiResponse = await fetchApi("/tasks", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -75,14 +79,14 @@ export async function createTask(
         body: JSON.stringify(task),
     });
 
-    return data.data.task;
+    return apiResponse.data.task;
 }
 
 export async function updateTask(
     task: UpdateTaskType,
     token: string,
 ): Promise<TaskType | null> {
-    const data = await fetchApi("/tasks", {
+    const apiResponse = await fetchApi("/tasks", {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
@@ -91,5 +95,17 @@ export async function updateTask(
         body: JSON.stringify(task),
     });
 
-    return data.data.task;
+    return apiResponse.data.task;
+}
+
+export async function deleteTask(taskId: string, token: string) {
+    const apiResponse = await fetchApi(`/tasks/${taskId}`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+    });
+
+    return apiResponse.ok;
 }
