@@ -2,13 +2,19 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Admin from "./pages/Admin";
 import { useEffect, useState } from "react";
-import { useAppDispatch } from "./lib/hooks";
-import { fetchTasks, setUserRegistered } from "./lib/features/tasks/tasksSlice";
+import { useAppDispatch, useAppSelector } from "./lib/hooks";
+import {
+    fetchTasks,
+    selectTasks,
+    setUserRegistered,
+} from "./lib/features/tasks/tasksSlice";
 import { useAuth0 } from "@auth0/auth0-react";
 import { getTasks, getUserData, registerUser } from "./utils/apiUtils";
+import LoadingComponent from "./components/LoadingComponent";
 
 export default function App() {
-    const { user: authUser, getAccessTokenSilently } = useAuth0();
+    const { user: authUser, isLoading, getAccessTokenSilently } = useAuth0();
+    const { userRegistered } = useAppSelector(selectTasks);
     const dispatch = useAppDispatch();
 
     const getUserInfo = async () => {
@@ -43,6 +49,8 @@ export default function App() {
             setInitialSate();
         }
     }, [authUser]);
+
+    if (isLoading || !userRegistered) return <LoadingComponent />;
 
     return (
         <BrowserRouter>

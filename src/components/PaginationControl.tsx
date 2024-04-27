@@ -8,7 +8,7 @@ export default function PaginationControl() {
     if (taskList.today.length == 1) return;
 
     return (
-        <ul className="flex flex-row justify-between items-center text-xl p-2 gap-8 flex-wrap">
+        <ul className="flex flex-row gap-4 justify-center items-center text-xl px-2  flex-wra">
             {taskList.today.map((tks, i) => (
                 <li
                     key={tks._id}

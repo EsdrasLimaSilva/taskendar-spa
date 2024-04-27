@@ -21,8 +21,6 @@ export default function Admin() {
         console.log(query);
     };
 
-    if (isLoading) return <LoadingComponent />;
-
     if (user)
         return (
             <>

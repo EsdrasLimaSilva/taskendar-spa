@@ -119,6 +119,14 @@ export function dateIsInInterval(
     pastDate: Date,
     futureDate: Date,
 ) {
+    return (
+        target.getFullYear() >= pastDate.getFullYear() &&
+        target.getMonth() >= pastDate.getMonth() &&
+        target.getDate() >= pastDate.getDate() &&
+        target.getFullYear() <= futureDate.getFullYear() &&
+        target.getMonth() <= futureDate.getMonth() &&
+        target.getDate() <= futureDate.getDate()
+    );
     return target >= pastDate && target <= futureDate;
 }
 
