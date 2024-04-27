@@ -1,7 +1,12 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
 import { dateIsToday } from "../../../utils/dateUtils";
-import { createTask, getTasks, updateTask } from "../../../utils/apiUtils";
+import {
+    createTask,
+    deleteTask,
+    getTasks,
+    updateTask,
+} from "../../../utils/apiUtils";
 
 /*============ Types ============*/
 export interface CreateTaskType {
@@ -123,6 +128,14 @@ export const updateTaskThunk = createAsyncThunk(
     async ({ task, token }: { task: UpdateTaskType; token: string }) => {
         const updatedTask = await updateTask(task, token);
         return updatedTask;
+    },
+);
+
+export const deleteTaskThunk = createAsyncThunk(
+    "tasks/deleteTask",
+    async ({ taskId, token }: { taskId: string; token: string }) => {
+        const taskWasDeleted = await deleteTask(taskId, token);
+        return { ok: taskWasDeleted, taskId };
     },
 );
 
@@ -261,6 +274,20 @@ const tasksSlice = createSlice({
                     );
                     state.taskList.others[taskIndex] = updatedTask;
                 }
+            }
+        });
+
+        // delete task
+        builder.addCase(deleteTaskThunk.fulfilled, (state, action) => {
+            const { ok, taskId } = action.payload;
+
+            if (ok) {
+                state.taskList.today = state.taskList.today.filter(
+                    (tsk) => tsk._id !== taskId,
+                );
+                state.taskList.others = state.taskList.others.filter(
+                    (tsk) => tsk._id !== taskId,
+                );
             }
         });
     },
