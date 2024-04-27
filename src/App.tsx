@@ -11,10 +11,6 @@ export default function App() {
     const { user: authUser, getAccessTokenSilently } = useAuth0();
     const dispatch = useAppDispatch();
 
-    const getInitialTasks = async () => {
-        dispatch(fetchTasks());
-    };
-
     const getUserInfo = async () => {
         const token = await getAccessTokenSilently();
 
@@ -27,13 +23,13 @@ export default function App() {
                 authUser!.nickname || `User${Math.ceil(Math.random() * 120)}`,
                 token,
             );
+
             if (!registered) alert("Não foi possível registrar você");
+        }
 
+        if (user) {
+            dispatch(fetchTasks(token));
             dispatch(setUserRegistered(true));
-
-            // getting the tasks
-            const tasks = await getTasks(token);
-            console.log(tasks);
         }
     };
 
