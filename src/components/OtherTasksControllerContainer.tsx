@@ -64,8 +64,11 @@ export default function AllTasksVisualizationController() {
     };
 
     return (
-        <div className="w-full flex flex-col gap-8">
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <div className="w-full flex flex-col gap-8 max-w-lg mx-auto">
+            <form
+                onSubmit={handleSubmit}
+                className="flex flex-col gap-4 max-w-lg"
+            >
                 <label className="flex flex-col">
                     <span className="text-xl">Ano</span>
                     <input

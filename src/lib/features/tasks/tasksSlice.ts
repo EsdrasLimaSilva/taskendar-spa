@@ -140,10 +140,12 @@ const tasksSlice = createSlice({
 
         setEditModalVisible(state) {
             state.editModal.visible = true;
+            document.body.style.overflow = "hidden";
         },
 
         setEditModalHidden(state) {
             state.editModal.visible = false;
+            document.body.style.overflow = "auto";
         },
     },
 

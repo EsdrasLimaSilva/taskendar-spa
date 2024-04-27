@@ -32,8 +32,8 @@ export default function Admin() {
                 <main className="px-4 py-8">
                     <SearchBar handleSearch={handleSearch} />
                     <button
-                        className="px-8 bg-neutral-500 text-neutral-50 font-bold w-full my-4 text-xl py-2 rounded-full"
-                        onClick={(e) => {
+                        className="px-8 bg-neutral-500 text-neutral-50 font-bold w-full my-4 text-xl py-2 rounded-full max-w-[200px] block mx-auto"
+                        onClick={() => {
                             dispatch(setTargetEditTask(""));
                             dispatch(setEditModalVisible());
                         }}

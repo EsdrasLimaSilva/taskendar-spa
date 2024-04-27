@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import {
     TaskType,
     selectTasks,
@@ -12,7 +12,7 @@ import { v4 as uuid } from "uuid";
 export default function AdminEditTaskModal() {
     const dispatch = useAppDispatch();
 
-    const { targetEditTask } = useAppSelector(selectTasks);
+    const { targetEditTask, editModal } = useAppSelector(selectTasks);
 
     const [formState, setFormState] = useState({
         // initializing the state
@@ -83,7 +83,7 @@ export default function AdminEditTaskModal() {
         items-center
         justify-center 
         top-0 
-        w-screen 
+        w-screen
         "
         >
             <div
@@ -95,6 +95,7 @@ export default function AdminEditTaskModal() {
             px-8
             py-16
             w-[90%]
+            max-w-lg
             "
             >
                 <h2
