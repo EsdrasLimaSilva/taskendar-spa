@@ -1,15 +1,23 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
 import { dateIsToday } from "../../../utils/dateUtils";
-import { v4 as uuid } from "uuid";
+import { createTask, getTasks } from "../../../utils/apiUtils";
 
-export interface TaskType {
-    _id: string;
-    uid: string;
+/*============ Types ============*/
+export interface CreateTaskType {
     title: string;
     description: string;
-    startsAt: string; // iso format
+    startsAt: string;
     endsAt: string;
+}
+
+export interface UpdateTaskType extends CreateTaskType {
+    _id: string;
+}
+
+export interface TaskType extends CreateTaskType {
+    _id: string;
+    uid: string;
 }
 
 export enum EVisualMode {
@@ -38,36 +46,6 @@ interface StateType {
     userRegistered: boolean;
 }
 
-// async thunk to get tasks
-export const fetchTasks = createAsyncThunk("tasks/fetchTasks", async () => {
-    const currentDate = new Date();
-    const year = currentDate.getFullYear();
-    const month = currentDate.getMonth();
-
-    // creating randomized tasks
-    const randomTasks: TaskType[] = [];
-    for (let i = 0; i < 10; i++) {
-        let stDt = new Date(year, month, Math.round(Math.random() * 20));
-
-        if (i < 3) stDt = new Date();
-
-        randomTasks.push({
-            _id: uuid(),
-            description: "Random description for task " + (i + 1),
-            startsAt: stDt.toISOString(),
-            endsAt: new Date(
-                stDt.getFullYear(),
-                stDt.getMonth(),
-                stDt.getDate() + Math.round(Math.random() * 2) + 1,
-            ).toISOString(),
-            title: "Random title for task " + (i + 1),
-            uid: uuid(),
-        });
-    }
-
-    return randomTasks;
-});
-
 const initialState: StateType = {
     taskList: {
         today: [],
@@ -88,7 +66,34 @@ const initialState: StateType = {
 
     userRegistered: false,
 };
+/*============ Async Thunks ============*/
+// async thunk to get tasks
+export const fetchTasks = createAsyncThunk(
+    "tasks/fetchTasks",
+    async (token: string) => {
+        const tasks: TaskType[] = await getTasks(token);
+        return tasks;
+    },
+);
 
+// async think to create a task
+export const createTaskThunk = createAsyncThunk(
+    "tasks/createTask",
+    async ({ task, token }: { task: CreateTaskType; token: string }) => {
+        const createdTask = await createTask(task, token);
+        return createdTask;
+    },
+);
+
+export const updateTaskThunk = createAsyncThunk(
+    "tasks/updateTask",
+    async ({ task, token }: { task: CreateTaskType; token: string }) => {
+        console.log("Updating a new TASK");
+        console.log(task);
+    },
+);
+
+/*============ Slice ============*/
 const tasksSlice = createSlice({
     name: "tasks",
     initialState,
@@ -159,8 +164,9 @@ const tasksSlice = createSlice({
     },
 
     extraReducers: (builder) => {
+        // fetch tasks
         builder.addCase(fetchTasks.fulfilled, (state, action) => {
-            const allTasks = [...action.payload];
+            const allTasks = [...action.payload]; // retrieved via async thunk
             const currentDate = new Date();
             const todayTks: TaskType[] = [];
             const otherTks: TaskType[] = [];
@@ -175,6 +181,18 @@ const tasksSlice = createSlice({
             state.visual.month = currentDate.getMonth();
             state.taskList.today = [...todayTks];
             state.taskList.others = [...otherTks];
+        });
+        //create task
+        builder.addCase(createTaskThunk.fulfilled, (state, action) => {
+            const createdTask = action.payload;
+
+            if (createdTask) {
+                if (dateIsToday(new Date(createdTask?.startsAt!))) {
+                    state.taskList.today.push(createdTask);
+                } else {
+                    state.taskList.others.push(createdTask);
+                }
+            }
         });
     },
 });

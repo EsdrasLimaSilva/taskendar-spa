@@ -1,8 +1,12 @@
 import { FormEvent, useEffect, useState } from "react";
 import {
+    CreateTaskType,
     TaskType,
+    UpdateTaskType,
+    createTaskThunk,
     selectTasks,
     setEditModalHidden,
+    updateTaskThunk,
 } from "../lib/features/tasks/tasksSlice";
 import { useAppDispatch, useAppSelector } from "../lib/hooks";
 import FormLabel from "./FormLabel";
@@ -15,7 +19,7 @@ export default function AdminEditTaskModal() {
         useAuth0();
     const dispatch = useAppDispatch();
 
-    const { targetEditTask, editModal } = useAppSelector(selectTasks);
+    const { targetEditTask, userRegistered } = useAppSelector(selectTasks);
 
     const [formState, setFormState] = useState({
         // initializing the state
@@ -37,43 +41,56 @@ export default function AdminEditTaskModal() {
             : toStringTimeHHMM(new Date()),
     });
 
+    /**
+     * Gets the data in the form state and creates a new task calling the create/update task async thunk defined by the redux store
+     */
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
 
-        const {
-            taskStartDate,
-            taskStartTime,
-            taskEndDate,
-            taskEndTime,
-            taskDescription,
-            taskTitle,
-        } = formState;
+        if (userRegistered) {
+            const {
+                taskStartDate,
+                taskStartTime,
+                taskEndDate,
+                taskEndTime,
+                taskDescription,
+                taskTitle,
+            } = formState;
 
-        // converting to date
-        const tskStartDate = new Date(`${taskStartDate}T${taskStartTime}`);
-        const tskEndDate = new Date(`${taskEndDate}T${taskEndTime}`);
+            // converting to date
+            const tskStartDate = new Date(`${taskStartDate}T${taskStartTime}`);
+            const tskEndDate = new Date(`${taskEndDate}T${taskEndTime}`);
 
-        // checking if interval is valid
-        if (tskEndDate < tskStartDate) {
-            alert("A Data de fim deve ser superior ou igual à data de início");
-            return;
-        }
+            // checking if interval is valid
+            if (tskEndDate < tskStartDate) {
+                alert(
+                    "A Data de fim deve ser superior ou igual à data de início",
+                );
+                return;
+            }
 
-        const newTask: TaskType = {
-            _id: targetEditTask?._id || uuid(),
-            description: taskDescription,
-            title: taskTitle,
-            startsAt: tskStartDate.toISOString(),
-            endsAt: tskEndDate.toISOString(),
-            uid: "",
-        };
+            const newTask: CreateTaskType = {
+                description: taskDescription,
+                title: taskTitle,
+                startsAt: tskStartDate.toISOString(),
+                endsAt: tskEndDate.toISOString(),
+            };
 
-        const token = await getAccessTokenSilently();
+            const token = await getAccessTokenSilently();
 
-        if (targetEditTask?._id) {
-            // it should update a existing task
-        } else {
-            // it shoudl create a new task
+            if (targetEditTask?._id) {
+                // it should update an existing task
+                const upTask: UpdateTaskType = {
+                    ...newTask,
+                    _id: targetEditTask?._id,
+                };
+                dispatch(updateTaskThunk({ task: upTask, token }));
+            } else {
+                // it shoudl create a new task
+                dispatch(createTaskThunk({ task: newTask, token }));
+            }
+
+            dispatch(setEditModalHidden());
         }
     };
 
