@@ -7,11 +7,11 @@ interface Props {
 }
 
 export default function TaskCard({ task }: Props) {
-    const startDate = new Date(task.startsAt);
+    const startsAt = new Date(task.startsAt);
     const endsAt = new Date(task.endsAt);
 
     const diffInterval = intervalToDuration({
-        start: startDate,
+        start: startsAt,
         end: endsAt,
     });
 
@@ -20,8 +20,8 @@ export default function TaskCard({ task }: Props) {
             <header className="flex flex-row justify-between items-end w-full">
                 <h2 className="text-2xl w-ful">{task.title}</h2>
                 <h3 className="bg-neutral-400 text-neutral-50 text-lg font-bold px-4 py-2 rounded-md">
-                    {startDate.getHours()}:
-                    {startDate.getMinutes().toString().padStart(2, "0")}h
+                    {startsAt.getHours()}:
+                    {startsAt.getMinutes().toString().padStart(2, "0")}h
                 </h3>
             </header>
             <main>
@@ -29,7 +29,7 @@ export default function TaskCard({ task }: Props) {
             </main>
             <footer className="border-t-2 border-t-neutral-300 pt-8">
                 <h3 className="text-xl mb-6 text-center">Duração</h3>
-                <ul className="w-full flex flex-col gap-6 lg:flex-row lg:flex-wrap">
+                <ul className="w-full flex flex-col gap-6 md:flex-row md:flex-wrap">
                     {diffInterval.years && (
                         <DurationCardItem
                             measure="Anos"

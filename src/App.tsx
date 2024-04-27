@@ -4,7 +4,7 @@ import Admin from "./pages/Admin";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "./lib/hooks";
 import {
-    fetchTasks,
+    fetchTasksThunk,
     selectTasks,
     setUserRegistered,
 } from "./lib/features/tasks/tasksSlice";
@@ -34,7 +34,7 @@ export default function App() {
         }
 
         if (user) {
-            dispatch(fetchTasks(token));
+            dispatch(fetchTasksThunk({ token }));
             dispatch(setUserRegistered(true));
         }
     };

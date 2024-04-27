@@ -11,6 +11,7 @@ import {
 import { useAppDispatch, useAppSelector } from "../lib/hooks";
 import LoginComponent from "../components/LoginComponent";
 import LoadingComponent from "../components/LoadingComponent";
+import OtherTasksIntervalController from "../components/OtherTasksIntervalController";
 
 export default function Admin() {
     const { user, isLoading } = useAuth0();
@@ -27,7 +28,7 @@ export default function Admin() {
                 {editModal.visible && <AdminEditTaskModal />}
 
                 <Header linkPath="/" linkText="Início" />
-                <main className="px-4 py-8">
+                <main className="px-4 py-8 w-full max-w-[800px] mx-auto">
                     <SearchBar handleSearch={handleSearch} />
                     <button
                         className="px-8 bg-neutral-500 text-neutral-50 font-bold w-full my-4 text-xl py-2 rounded-full max-w-[200px] block mx-auto"
@@ -43,6 +44,8 @@ export default function Admin() {
                         tasks={taskList.today}
                         sectionTitle="Tarefas de Hoje"
                     />
+
+                    <OtherTasksIntervalController />
                     <AdminTaskContainer
                         tasks={taskList.others}
                         sectionTitle="Outras tarefas"

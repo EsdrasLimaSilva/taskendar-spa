@@ -8,7 +8,7 @@ interface Props {
 
 export default function AdminTaskContainer({ sectionTitle, tasks }: Props) {
     return (
-        <section className="py-16 max-w-lg mx-auto">
+        <section className="py-16 w-full mx-auto">
             <h2 className="text-2xl mb-8">{sectionTitle}</h2>
             <ul className="w-full flex flex-col gap-4">
                 {tasks.length > 0 ? (
