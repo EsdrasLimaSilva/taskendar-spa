@@ -7,7 +7,7 @@ export default function TodayTasksContainer() {
 
     return (
         <main className="py-12">
-            <h2 className="text-3xl font-bold mb-16 text-center">
+            <h2 className="text-3xl font-bold mb-16 text-center ">
                 Tarefas de hoje
             </h2>
             {taskList.today.length > 0 ? (

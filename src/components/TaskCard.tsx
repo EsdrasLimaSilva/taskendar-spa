@@ -1,7 +1,6 @@
 import { constructNow, intervalToDuration } from "date-fns";
 import { TaskType } from "../lib/features/tasks/tasksSlice";
 import DurationCardItem from "./DurationCardItem";
-import { useState } from "react";
 
 interface Props {
     task: TaskType;
@@ -28,9 +27,9 @@ export default function TaskCard({ task }: Props) {
             <main>
                 <p className="text-lg text-justify">{task.description}</p>
             </main>
-            <footer>
-                <h3 className="text-xl mb-6 font-bold">Duração</h3>
-                <ul className="flex flex-col gap-6">
+            <footer className="border-t-2 border-t-neutral-300 pt-8">
+                <h3 className="text-xl mb-6 text-center">Duração</h3>
+                <ul className="w-full flex flex-col gap-6 lg:flex-row lg:flex-wrap">
                     {diffInterval.years && (
                         <DurationCardItem
                             measure="Anos"
