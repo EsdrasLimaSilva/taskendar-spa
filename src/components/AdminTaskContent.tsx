@@ -37,6 +37,7 @@ export default function AdminTaskContent() {
                 <AdminTaskContainer
                     tasks={taskList.today}
                     sectionTitle="Tarefas de Hoje"
+                    testId="admin-today-tasks-container"
                 />
             )}
 
@@ -48,6 +49,7 @@ export default function AdminTaskContent() {
                     <AdminTaskContainer
                         tasks={taskList.others}
                         sectionTitle="Outras tarefas"
+                        testId="admin-other-tasks-container"
                     />
                 </>
             )}

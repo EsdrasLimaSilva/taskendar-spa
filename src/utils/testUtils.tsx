@@ -39,7 +39,7 @@ export const DummyInitalTestState: RootState = {
         },
 
         currentPage: 1,
-        editModal: { visible: true },
+        editModal: { visible: false },
         loadingTasks: {
             others: false,
             today: false,
