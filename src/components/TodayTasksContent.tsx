@@ -10,7 +10,7 @@ export default function TodayTasksContent() {
 
     return (
         <main data-testid="today-tasks-content" className="py-12">
-            <h2 className="mb-16 text-center text-3xl font-bold ">
+            <h2 className="mb-16  text-center text-3xl font-bold">
                 Tarefas de hoje
             </h2>
             {taskList.today.length > 0 ? (
