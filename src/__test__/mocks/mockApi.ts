@@ -7,10 +7,11 @@
 
 import { HttpResponse, delay, http } from "msw";
 import { ApiResponseType } from "../../utils/apiResponseType";
+import { BASE_URL } from "../../utils/apiUtils";
 import { dummyTask } from "../../utils/testUtils";
 
 const successHandlers = [
-    http.get("/tasks", async () => {
+    http.get(`${BASE_URL}/tasks`, async () => {
         await delay(200);
         const response: ApiResponseType = {
             ok: true,
@@ -22,7 +23,7 @@ const successHandlers = [
         return HttpResponse.json(response);
     }),
 
-    http.get("/users", async () => {
+    http.get(`${BASE_URL}/users`, async () => {
         await delay(200);
         const response: ApiResponseType = {
             ok: true,
@@ -32,7 +33,7 @@ const successHandlers = [
         return HttpResponse.json(response);
     }),
 
-    http.post("/tasks", async () => {
+    http.post(`${BASE_URL}/tasks`, async () => {
         await delay(200);
         const response: ApiResponseType = {
             ok: true,
@@ -44,7 +45,7 @@ const successHandlers = [
         return HttpResponse.json(response);
     }),
 
-    http.put("/tasks", async () => {
+    http.put(`${BASE_URL}/tasks`, async () => {
         await delay(200);
         const response: ApiResponseType = {
             ok: true,
@@ -56,7 +57,7 @@ const successHandlers = [
         return HttpResponse.json(response);
     }),
 
-    http.delete("/tasks/:taskId", async () => {
+    http.delete(`${BASE_URL}/tasks/:taskId`, async () => {
         await delay(200);
         const response: ApiResponseType = {
             ok: true,

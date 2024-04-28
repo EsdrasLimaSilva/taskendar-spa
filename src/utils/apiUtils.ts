@@ -5,7 +5,7 @@ import {
 } from "../lib/features/tasks/tasksSlice";
 import { ApiResponseType } from "./apiResponseType";
 
-const BASE_URL = "http://localhost:3333";
+export const BASE_URL = "http://localhost:3333";
 
 async function fetchApi(
     path: string,
