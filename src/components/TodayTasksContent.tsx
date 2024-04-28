@@ -1,9 +1,12 @@
 import { selectTasks } from "../lib/features/tasks/tasksSlice";
 import { useAppSelector } from "../lib/hooks";
 import TaskCard from "./TaskCard";
+import TaskLoadingIndicator from "./TaskLoadingIndicator";
 
 export default function TodayTasksContainer() {
-    const { taskList, currentPage } = useAppSelector(selectTasks);
+    const { taskList, currentPage, loadingTasks } = useAppSelector(selectTasks);
+
+    if (loadingTasks.today) return <TaskLoadingIndicator />;
 
     return (
         <main className="py-12">

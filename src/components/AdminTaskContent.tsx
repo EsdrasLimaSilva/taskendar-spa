@@ -2,10 +2,13 @@ import { selectTasks, setSearchActive } from "../lib/features/tasks/tasksSlice";
 import { useAppDispatch, useAppSelector } from "../lib/hooks";
 import AdminTaskContainer from "./AdminTaskContainer";
 import OtherTasksIntervalController from "./OtherTasksIntervalController";
+import TaskLoadingIndicator from "./TaskLoadingIndicator";
 
 export default function AdminTaskContent() {
-    const { taskList, search } = useAppSelector(selectTasks);
+    const { taskList, search, loadingTasks } = useAppSelector(selectTasks);
     const dispatch = useAppDispatch();
+
+    if (search.loading) return <TaskLoadingIndicator />;
 
     if (search.active) {
         return (
@@ -27,16 +30,26 @@ export default function AdminTaskContent() {
 
     return (
         <>
-            <AdminTaskContainer
-                tasks={taskList.today}
-                sectionTitle="Tarefas de Hoje"
-            />
+            {loadingTasks.today ? (
+                <TaskLoadingIndicator />
+            ) : (
+                <AdminTaskContainer
+                    tasks={taskList.today}
+                    sectionTitle="Tarefas de Hoje"
+                />
+            )}
 
-            <OtherTasksIntervalController />
-            <AdminTaskContainer
-                tasks={taskList.others}
-                sectionTitle="Outras tarefas"
-            />
+            {loadingTasks.others ? (
+                <TaskLoadingIndicator />
+            ) : (
+                <>
+                    <OtherTasksIntervalController />
+                    <AdminTaskContainer
+                        tasks={taskList.others}
+                        sectionTitle="Outras tarefas"
+                    />
+                </>
+            )}
         </>
     );
 }

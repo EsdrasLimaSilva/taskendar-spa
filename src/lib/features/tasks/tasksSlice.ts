@@ -26,6 +26,13 @@ export interface TaskType extends CreateTaskType {
     uid: string;
 }
 
+export enum ETaskStateStatus {
+    IDLE,
+    LOADING_TODAY,
+    LOADING_OTHERS,
+    LOADING_UPDATE,
+}
+
 export enum EVisualMode {
     DAY,
     WEEK,
@@ -55,6 +62,10 @@ interface StateType {
         loading: boolean;
         tasks: TaskType[];
     };
+    loadingTasks: {
+        today: boolean;
+        others: boolean;
+    };
 }
 
 const initialState: StateType = {
@@ -82,23 +93,13 @@ const initialState: StateType = {
         loading: false,
         tasks: [],
     },
+
+    loadingTasks: {
+        today: true,
+        others: true,
+    },
 };
 /*============ Async Thunks ============*/
-
-/**
- * This Async thnk fetchs all tasks in the repository.
- * @important Both today tasks and other tasks state will be updated!
- */
-export const fetchTasksThunk = createAsyncThunk(
-    "tasks/fetchTasksThunk",
-    async ({ targetDate, token }: { targetDate?: Date; token: string }) => {
-        const date = new Date();
-        const month = date.getMonth() + 1;
-        const year = date.getFullYear();
-        const tasks: TaskType[] = await getTasks(month, year, token);
-        return tasks;
-    },
-);
 
 export const fetchTodayTasksThunk = createAsyncThunk(
     "tasks/fetchTodayTasks",
@@ -241,35 +242,51 @@ const tasksSlice = createSlice({
     },
 
     extraReducers: (builder) => {
-        // fetch tasks
-        builder.addCase(fetchTasksThunk.fulfilled, (state, action) => {
-            const allTasks = [...action.payload]; // retrieved via async thunk
-            const currentDate = new Date();
-            const todayTks: TaskType[] = [];
-            const otherTks: TaskType[] = [];
+        /* ================================================================ */
+        /* =========================== Pending ============================ */
 
-            // organizing all tasks into today and others
-            allTasks.forEach((tsk) => {
-                if (dateIsToday(new Date(tsk.startsAt))) todayTks.push(tsk);
-                else otherTks.push(tsk);
-            });
-
-            state.visual.year = currentDate.getFullYear();
-            state.visual.month = currentDate.getMonth();
-            state.taskList.today = [...todayTks];
-            state.taskList.others = [...otherTks];
+        builder.addCase(searchTasksQueryThunk.pending, (state, action) => {
+            state.search.loading = true;
+            state.search.active = true;
         });
+
+        builder.addCase(fetchTodayTasksThunk.pending, (state, action) => {
+            state.loadingTasks.today = true;
+        });
+
+        builder.addCase(fetchOtherTasksThunk.pending, (state, action) => {
+            state.loadingTasks.others = true;
+        });
+
+        builder.addCase(createTaskThunk.pending, (state, action) => {
+            state.loadingTasks.today = true;
+            state.loadingTasks.others = true;
+        });
+
+        builder.addCase(updateTaskThunk.pending, (state, action) => {
+            state.loadingTasks.today = true;
+            state.loadingTasks.others = true;
+        });
+
+        /* ================================================================ */
+        /* ========================= Fullfield ============================ */
 
         // handle today tasks fetching
         builder.addCase(fetchTodayTasksThunk.fulfilled, (state, action) => {
             const tasks = action.payload;
-            state.taskList.today = [...tasks];
+            state.taskList.today = tasks.filter((tsk) =>
+                dateIsToday(new Date(tsk.startsAt)),
+            );
+            state.loadingTasks.today = false;
         });
 
         // handle other tasks fetching
         builder.addCase(fetchOtherTasksThunk.fulfilled, (state, action) => {
             const tasks = action.payload;
-            state.taskList.others = [...tasks];
+            state.taskList.others = tasks.filter(
+                (tsk) => !dateIsToday(new Date(tsk.startsAt)),
+            );
+            state.loadingTasks.others = false;
         });
 
         //create task
@@ -283,6 +300,9 @@ const tasksSlice = createSlice({
                     state.taskList.others.push(createdTask);
                 }
             }
+
+            state.loadingTasks.today = false;
+            state.loadingTasks.others = false;
         });
         // update task
         builder.addCase(updateTaskThunk.fulfilled, (state, action) => {
@@ -305,6 +325,9 @@ const tasksSlice = createSlice({
                     state.taskList.others[taskIndex] = updatedTask;
                 }
             }
+
+            state.loadingTasks.today = false;
+            state.loadingTasks.others = false;
         });
 
         // delete task
@@ -325,7 +348,7 @@ const tasksSlice = createSlice({
         builder.addCase(searchTasksQueryThunk.fulfilled, (state, action) => {
             const tasks = action.payload;
             state.search.tasks = [...tasks];
-            state.search.active = true;
+            state.search.loading = false;
         });
     },
 });

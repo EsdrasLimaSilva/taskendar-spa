@@ -1,15 +1,16 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Admin from "./pages/Admin";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "./lib/hooks";
 import {
-    fetchTasksThunk,
+    fetchOtherTasksThunk,
+    fetchTodayTasksThunk,
     selectTasks,
     setUserRegistered,
 } from "./lib/features/tasks/tasksSlice";
 import { useAuth0 } from "@auth0/auth0-react";
-import { getTasks, getUserData, registerUser } from "./utils/apiUtils";
+import { getUserData, registerUser } from "./utils/apiUtils";
 import LoadingComponent from "./components/LoadingComponent";
 
 export default function App() {
@@ -34,7 +35,8 @@ export default function App() {
         }
 
         if (user) {
-            dispatch(fetchTasksThunk({ token }));
+            dispatch(fetchTodayTasksThunk(token));
+            dispatch(fetchOtherTasksThunk({ token }));
             dispatch(setUserRegistered(true));
         }
     };
