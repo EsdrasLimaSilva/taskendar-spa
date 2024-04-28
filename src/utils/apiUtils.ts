@@ -109,3 +109,20 @@ export async function deleteTask(taskId: string, token: string) {
 
     return apiResponse.ok;
 }
+
+export async function searchTasks(
+    query: string,
+    token: string,
+): Promise<TaskType[]> {
+    const apiResponse = await fetchApi(`/tasks/search/${query}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+    });
+
+    const tasks = apiResponse.data.tasks || [];
+
+    return [...tasks];
+}
