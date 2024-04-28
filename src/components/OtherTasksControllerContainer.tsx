@@ -1,14 +1,11 @@
-import { ButtonHTMLAttributes, FormEvent, useRef } from "react";
+import { ButtonHTMLAttributes } from "react";
 import { useAppDispatch, useAppSelector } from "../lib/hooks";
 
 import {
     EVisualMode,
-    fetchOtherTasksThunk,
     selectTasks,
     setOtherVisualization,
 } from "../lib/features/tasks/tasksSlice";
-import { EMonth } from "../utils/dateUtils";
-import { useAuth0 } from "@auth0/auth0-react";
 import OtherTasksIntervalController from "./OtherTasksIntervalController";
 
 interface RadioInputProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -20,7 +17,7 @@ function SelectButton({ label, ...rest }: RadioInputProps) {
         <button
             type="button"
             {...rest}
-            className="bg-neutral-50 text-neutral-400 px-4 py-2 border-2 flex justify-center items-center rounded-md disabled:bg-neutral-400 disabled:text-neutral-50 flex-grow-[1] max-w-40"
+            className="flex max-w-40 flex-grow-[1] items-center justify-center rounded-md border-2 bg-neutral-50 px-4 py-2 text-neutral-400 disabled:bg-neutral-400 disabled:text-neutral-50"
         >
             {label}
         </button>
@@ -34,10 +31,10 @@ export default function AllTasksVisualizationController() {
     const dispatch = useAppDispatch();
 
     return (
-        <div className="w-full flex flex-col gap-8">
+        <div className="flex w-full flex-col gap-8">
             <OtherTasksIntervalController />
 
-            <div className="flex items-center justify-between w-full max-w-[600px] mx-auto">
+            <div className="mx-auto flex w-full max-w-[600px] items-center justify-between">
                 <SelectButton
                     label="Dia"
                     disabled={visual.mode == EVisualMode.DAY}

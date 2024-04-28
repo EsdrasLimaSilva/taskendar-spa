@@ -15,7 +15,7 @@ export default function AdminTaskContent() {
             <section>
                 <button
                     type="button"
-                    className="px-4 bg-neutral-400 text-neutral-50 text-xl rounded-full"
+                    className="rounded-full bg-neutral-400 px-4 text-xl text-neutral-50"
                     onClick={() => dispatch(setSearchActive(false))}
                 >
                     Voltar

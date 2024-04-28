@@ -18,19 +18,19 @@ export default function SearchBar({ handleSearch }: Props) {
 
     return (
         <form
-            className="w-full flex align-center justify-between overflow-clip border-[1px]  border-neutral-600 rounded-full max-w-[600px] mx-auto"
+            className="align-center mx-auto flex w-full max-w-[600px] justify-between  overflow-clip rounded-full border-[1px] border-neutral-600"
             onSubmit={handleSubmit}
         >
             <input
                 ref={queryInputRef}
                 type="text"
                 placeholder="Busque por uma tarefa"
-                className="px-9 py-2 outline-none text-base w-full"
+                className="w-full px-9 py-2 text-base outline-none"
             />
 
             <button
                 type="submit"
-                className="bg-neutral-500 text-neutral-50 w-[25%] max-w-[200px] flex justify-center items-center"
+                className="flex w-[25%] max-w-[200px] items-center justify-center bg-neutral-500 text-neutral-50"
             >
                 <FaSearch />
             </button>

@@ -8,11 +8,11 @@ export default function PaginationControl() {
     if (taskList.today.length == 1) return;
 
     return (
-        <ul className="flex flex-row gap-4 justify-center items-center text-xl px-2  flex-wra">
+        <ul className="flex-wra flex flex-row items-center justify-center gap-4 px-2  text-xl">
             {taskList.today.map((tks, i) => (
                 <li
                     key={tks._id}
-                    className={`flex justify-center items-center bg-neutral-50 w-[48px] h-[48px] rounded-full border-[1px] border-neutral-600 ${
+                    className={`flex h-[48px] w-[48px] items-center justify-center rounded-full border-[1px] border-neutral-600 bg-neutral-50 ${
                         i + 1 == currentPage && "bg-neutral-600 text-neutral-50"
                     }`}
                     onClick={() => dispatch(goToPage(i + 1))}

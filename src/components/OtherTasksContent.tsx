@@ -1,6 +1,6 @@
 import { TaskType, selectTasks } from "../lib/features/tasks/tasksSlice";
-import { useAppSelector } from "../lib/hooks";
 import { getVisualContainers } from "../lib/features/visualization/visualTasks";
+import { useAppSelector } from "../lib/hooks";
 import TaskLoadingIndicator from "./TaskLoadingIndicator";
 
 interface VisualItemProps {
@@ -10,17 +10,17 @@ interface VisualItemProps {
 
 const VisualCardItem = ({ unitValue, tasks }: VisualItemProps) => {
     return (
-        <article className="grid grid-cols-[64px_1fr] items-center gap-2 bg-neutral-50 h-full">
-            <h3 className="w-full h-full flex justify-center items-center min-w-[64px] bg-neutral-400 text-neutral-50 text-center text-xl font-bold">
+        <article className="grid h-full grid-cols-[64px_1fr] items-center gap-2 bg-neutral-50">
+            <h3 className="flex h-full w-full min-w-[64px] items-center justify-center bg-neutral-400 text-center text-xl font-bold text-neutral-50">
                 {unitValue}
             </h3>
             <ul className="flex-grow-[1]">
                 {tasks.map((tks) => (
                     <li
                         key={tks._id}
-                        className="border-b-[1px] border-neutral-50 py-4 bg-neutral-400 text-neutral-50 px-4"
+                        className="border-b-[1px] border-neutral-50 bg-neutral-400 px-4 py-4 text-neutral-50"
                     >
-                        <strong className="text-lg block font-normal">
+                        <strong className="block text-lg font-normal">
                             {tks.title}
                         </strong>
                     </li>
@@ -43,7 +43,7 @@ export default function AllTasksVisualContent() {
     if (loadingTasks.others) return <TaskLoadingIndicator />;
 
     return (
-        <section className="w-full flex flex-col gap-8 py-16">
+        <section className="flex w-full flex-col gap-8 py-16">
             <h2 className="text-2xl text-neutral-600">
                 {visualResponse.modeLabel}
             </h2>

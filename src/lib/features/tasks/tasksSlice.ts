@@ -1,6 +1,4 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { RootState } from "../../store";
-import { dateIsToday } from "../../../utils/dateUtils";
 import {
     createTask,
     deleteTask,
@@ -8,6 +6,8 @@ import {
     searchTasks,
     updateTask,
 } from "../../../utils/apiUtils";
+import { dateIsToday } from "../../../utils/dateUtils";
+import { RootState } from "../../store";
 
 /*============ Types ============*/
 export interface CreateTaskType {
@@ -245,25 +245,25 @@ const tasksSlice = createSlice({
         /* ================================================================ */
         /* =========================== Pending ============================ */
 
-        builder.addCase(searchTasksQueryThunk.pending, (state, action) => {
+        builder.addCase(searchTasksQueryThunk.pending, (state) => {
             state.search.loading = true;
             state.search.active = true;
         });
 
-        builder.addCase(fetchTodayTasksThunk.pending, (state, action) => {
+        builder.addCase(fetchTodayTasksThunk.pending, (state) => {
             state.loadingTasks.today = true;
         });
 
-        builder.addCase(fetchOtherTasksThunk.pending, (state, action) => {
+        builder.addCase(fetchOtherTasksThunk.pending, (state) => {
             state.loadingTasks.others = true;
         });
 
-        builder.addCase(createTaskThunk.pending, (state, action) => {
+        builder.addCase(createTaskThunk.pending, (state) => {
             state.loadingTasks.today = true;
             state.loadingTasks.others = true;
         });
 
-        builder.addCase(updateTaskThunk.pending, (state, action) => {
+        builder.addCase(updateTaskThunk.pending, (state) => {
             state.loadingTasks.today = true;
             state.loadingTasks.others = true;
         });
