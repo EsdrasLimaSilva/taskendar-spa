@@ -103,6 +103,7 @@ export default function AdminEditTaskModal() {
         justify-center 
         top-0 
         w-screen
+        z-10
         "
         >
             <div

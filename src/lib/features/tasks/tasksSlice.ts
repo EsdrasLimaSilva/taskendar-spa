@@ -5,6 +5,7 @@ import {
     createTask,
     deleteTask,
     getTasks,
+    searchTasks,
     updateTask,
 } from "../../../utils/apiUtils";
 
@@ -49,6 +50,11 @@ interface StateType {
         visible: boolean;
     };
     userRegistered: boolean;
+    search: {
+        active: boolean;
+        loading: boolean;
+        tasks: TaskType[];
+    };
 }
 
 const initialState: StateType = {
@@ -70,6 +76,12 @@ const initialState: StateType = {
     },
 
     userRegistered: false,
+
+    search: {
+        active: false,
+        loading: false,
+        tasks: [],
+    },
 };
 /*============ Async Thunks ============*/
 
@@ -110,6 +122,15 @@ export const fetchOtherTasksThunk = createAsyncThunk(
         const year = date.getFullYear();
 
         const tasks: TaskType[] = await getTasks(month, year, token);
+        return tasks;
+    },
+);
+
+// searhc tasks by query
+export const searchTasksQueryThunk = createAsyncThunk(
+    "tasks/searchTasks",
+    async ({ query, token }: { query: string; token: string }) => {
+        const tasks = await searchTasks(query, token);
         return tasks;
     },
 );
@@ -213,6 +234,10 @@ const tasksSlice = createSlice({
         setUserRegistered(state, action: PayloadAction<boolean>) {
             state.userRegistered = action.payload;
         },
+
+        setSearchActive(state, action: PayloadAction<boolean>) {
+            state.search.active = action.payload;
+        },
     },
 
     extraReducers: (builder) => {
@@ -290,6 +315,13 @@ const tasksSlice = createSlice({
                 );
             }
         });
+
+        // searching tasks
+        builder.addCase(searchTasksQueryThunk.fulfilled, (state, action) => {
+            const tasks = action.payload;
+            state.search.tasks = [...tasks];
+            state.search.active = true;
+        });
     },
 });
 
@@ -302,6 +334,7 @@ export const {
     setEditModalHidden,
     setFullVisual,
     setUserRegistered,
+    setSearchActive,
 } = tasksSlice.actions;
 export const selectTasks = (store: RootState) => store.tasks;
 export default tasksSlice.reducer;

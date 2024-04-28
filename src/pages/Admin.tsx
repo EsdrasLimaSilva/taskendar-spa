@@ -1,25 +1,26 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import AdminEditTaskModal from "../components/AdminEditTaskModal";
-import AdminTaskContainer from "../components/AdminTaskContainer";
 import Header from "../components/Header";
 import SearchBar from "../components/SearchBar";
 import {
+    searchTasksQueryThunk,
     selectTasks,
     setEditModalVisible,
     setTargetEditTask,
 } from "../lib/features/tasks/tasksSlice";
 import { useAppDispatch, useAppSelector } from "../lib/hooks";
 import LoginComponent from "../components/LoginComponent";
-import LoadingComponent from "../components/LoadingComponent";
-import OtherTasksIntervalController from "../components/OtherTasksIntervalController";
+import AdminTaskContent from "../components/AdminTaskContent";
 
 export default function Admin() {
-    const { user, isLoading } = useAuth0();
-    const { taskList, editModal } = useAppSelector(selectTasks);
+    const { editModal, search } = useAppSelector(selectTasks);
+
+    const { user, getAccessTokenSilently } = useAuth0();
     const dispatch = useAppDispatch();
 
     const handleSearch = async (query: string) => {
-        console.log(query);
+        const token = await getAccessTokenSilently();
+        dispatch(searchTasksQueryThunk({ query, token }));
     };
 
     if (user)
@@ -39,17 +40,7 @@ export default function Admin() {
                     >
                         criar tarefa
                     </button>
-
-                    <AdminTaskContainer
-                        tasks={taskList.today}
-                        sectionTitle="Tarefas de Hoje"
-                    />
-
-                    <OtherTasksIntervalController />
-                    <AdminTaskContainer
-                        tasks={taskList.others}
-                        sectionTitle="Outras tarefas"
-                    />
+                    <AdminTaskContent />
                 </main>
             </>
         );
