@@ -1,27 +1,13 @@
 import * as auth0 from "@auth0/auth0-react";
 import { fireEvent, screen } from "@testing-library/react";
-import { HttpResponse, delay, http } from "msw";
 import { setupServer } from "msw/node";
 import { vi } from "vitest";
 import AdminEditTaskCard from "../components/AdminEditTaskCard";
 import { TaskType } from "../lib/features/tasks/tasksSlice";
-import { ApiResponseType } from "../utils/apiResponseType";
 import { renderWithProviders } from "../utils/testUtils";
+import { successHandlers } from "./mocks/mockApi";
 
-// api implementation for tests
-const handlers = [
-    http.delete("/tasks/:taskId", async () => {
-        await delay(200);
-        const response: ApiResponseType = {
-            ok: true,
-            data: {},
-            message: "Task was deleted",
-        };
-        return HttpResponse.json(response);
-    }),
-];
-
-const server = setupServer(...handlers); // creating a server to intercept API requests
+const server = setupServer(...successHandlers); // creating a server to intercept API requests
 
 vi.mock("@auth0/auth0-react"); // mocking auth 0 so we do not need be authenticated
 
