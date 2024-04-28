@@ -6,6 +6,10 @@
  */
 
 import { HttpResponse, delay, http } from "msw";
+import {
+    CreateTaskType,
+    UpdateTaskType,
+} from "../../lib/features/tasks/tasksSlice";
 import { ApiResponseType } from "../../utils/apiResponseType";
 import { BASE_URL } from "../../utils/apiUtils";
 import { dummyTask } from "../../utils/testUtils";
@@ -33,24 +37,34 @@ const successHandlers = [
         return HttpResponse.json(response);
     }),
 
-    http.post(`${BASE_URL}/tasks`, async () => {
+    http.post(`${BASE_URL}/tasks`, async ({ request }) => {
+        const body = (await request.json()) as CreateTaskType;
+
+        if (!body) throw new Error("Body must be passes as a CreateTaskType");
+
         await delay(200);
         const response: ApiResponseType = {
             ok: true,
             data: {
-                task: [{ ...dummyTask }],
+                task: { ...body, _id: "123567" },
             },
             message: "Tasks found",
         };
         return HttpResponse.json(response);
     }),
 
-    http.put(`${BASE_URL}/tasks`, async () => {
+    http.put(`${BASE_URL}/tasks`, async ({ request }) => {
+        const body = (await request.json()) as UpdateTaskType;
+
+        if (!body) throw new Error("Body must be passes as a UpdateTaskType");
+
         await delay(200);
         const response: ApiResponseType = {
             ok: true,
             data: {
-                task: [{ ...dummyTask }],
+                task: {
+                    ...body,
+                },
             },
             message: "Tasks updated",
         };
