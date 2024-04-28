@@ -268,6 +268,11 @@ const tasksSlice = createSlice({
             state.loadingTasks.others = true;
         });
 
+        builder.addCase(deleteTaskThunk.pending, (state) => {
+            state.loadingTasks.today = true;
+            state.loadingTasks.others = true;
+        });
+
         /* ================================================================ */
         /* ========================= Fullfield ============================ */
 
@@ -342,6 +347,9 @@ const tasksSlice = createSlice({
                     (tsk) => tsk._id !== taskId,
                 );
             }
+
+            state.loadingTasks.today = false;
+            state.loadingTasks.others = false;
         });
 
         // searching tasks
