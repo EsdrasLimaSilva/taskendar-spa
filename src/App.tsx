@@ -2,6 +2,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import LoadingComponent from "./components/LoadingComponent";
+import LoginComponent from "./components/LoginComponent";
 import {
     fetchOtherTasksThunk,
     fetchTodayTasksThunk,
@@ -20,7 +21,7 @@ export default function App() {
 
     const getUserInfo = async () => {
         const token = await getAccessTokenSilently();
-
+        console.log(">>>>>>>>>", token);
         // trying to retrieve user data
         const user = await getUserData(token);
 
@@ -52,7 +53,9 @@ export default function App() {
         }
     }, [authUser]);
 
-    if (isLoading || !userRegistered) return <LoadingComponent />;
+    if (isLoading) return <LoadingComponent />;
+    if (!authUser) <LoginComponent />;
+    if (!userRegistered) <LoadingComponent />;
 
     return (
         <BrowserRouter>
