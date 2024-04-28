@@ -1,6 +1,7 @@
 import { TaskType, selectTasks } from "../lib/features/tasks/tasksSlice";
 import { useAppSelector } from "../lib/hooks";
 import { getVisualContainers } from "../lib/features/visualization/visualTasks";
+import TaskLoadingIndicator from "./TaskLoadingIndicator";
 
 interface VisualItemProps {
     unitValue: string;
@@ -30,7 +31,7 @@ const VisualCardItem = ({ unitValue, tasks }: VisualItemProps) => {
 };
 
 export default function AllTasksVisualContent() {
-    const { visual, taskList } = useAppSelector(selectTasks);
+    const { visual, taskList, loadingTasks } = useAppSelector(selectTasks);
 
     const visualResponse = getVisualContainers(
         visual.year,
@@ -38,6 +39,8 @@ export default function AllTasksVisualContent() {
         taskList.others,
         visual.mode,
     );
+
+    if (loadingTasks.others) return <TaskLoadingIndicator />;
 
     return (
         <section className="w-full flex flex-col gap-8 py-16">
