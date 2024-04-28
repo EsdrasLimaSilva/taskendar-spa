@@ -28,29 +28,45 @@ export default function AdminEditTaskCard({ task }: { task: TaskType }) {
     };
 
     const deleteTask = async () => {
+        hideConfirmation();
         const token = await getAccessTokenSilently();
         dispatch(deleteTaskThunk({ taskId: task._id, token }));
-        hideConfirmation();
     };
 
     return (
-        <li className=" item-center relative flex justify-between overflow-clip rounded-md bg-neutral-50 p-4 text-xl text-neutral-600">
+        <li
+            data-testid="admin-task-card"
+            className=" item-center relative flex justify-between overflow-clip rounded-md bg-neutral-50 p-4 text-xl text-neutral-600"
+        >
             <span
-                className={`absolute bottom-0 right-0 top-0 flex w-[12%] min-w-[80px] translate-x-full flex-row items-center justify-around gap-2 border-2 border-neutral-200 bg-neutral-100 text-2xl transition-all [&>button]:text-3xl ${
+                data-testid="confirm-task-del-area"
+                className={`adm-confirm-area absolute bottom-0 right-0 top-0 flex w-[12%] min-w-[80px] translate-x-full flex-row items-center justify-around gap-2 border-2 border-neutral-200 bg-neutral-100 text-2xl transition-all [&>button]:text-3xl ${
                     deleteConfirmationVisible && "translate-x-0"
                 }`}
             >
-                <button type="button" onClick={deleteTask}>
+                <button
+                    data-testid="confirm-task-del-btn"
+                    type="button"
+                    onClick={deleteTask}
+                >
                     <BiCheck />
                 </button>
-                <button type="button" onClick={hideConfirmation}>
+                <button
+                    data-testid="cancel-task-del-btn"
+                    type="button"
+                    onClick={hideConfirmation}
+                >
                     <CgClose />
                 </button>
             </span>
             <h4>{task.title}</h4>
 
             <div className="item-center flex flex-row">
-                <button type="button" onClick={showConfirmation}>
+                <button
+                    data-testid="show-confirmation-area-btn"
+                    type="button"
+                    onClick={showConfirmation}
+                >
                     <IoMdTrash className="text-3xl" />
                 </button>
                 <button>
