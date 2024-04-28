@@ -8,12 +8,12 @@ interface Props {
 
 export default function Header({ linkPath, linkText }: Props) {
     return (
-        <header className="p-4 bg-white flex justify-between shadow-sm">
+        <header className="flex justify-between bg-white p-4 shadow-sm">
             <img src={logo} alt="" className="block w-[32px]" />
 
             <Link
                 to={linkPath}
-                className="bg-neutral-400 text-neutral-50 text-base font-bold flex justify-center items-center px-8 rounded-md"
+                className="flex items-center justify-center rounded-md bg-neutral-400 px-8 text-base font-bold text-neutral-50"
             >
                 {linkText}
             </Link>

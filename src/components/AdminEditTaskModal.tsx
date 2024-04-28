@@ -1,3 +1,4 @@
+import { useAuth0 } from "@auth0/auth0-react";
 import { FormEvent, useState } from "react";
 import {
     CreateTaskType,
@@ -8,9 +9,8 @@ import {
     updateTaskThunk,
 } from "../lib/features/tasks/tasksSlice";
 import { useAppDispatch, useAppSelector } from "../lib/hooks";
-import FormLabel from "./FormLabel";
 import { toStringTimeHHMM, toStringYYYMMDD } from "../utils/dateUtils";
-import { useAuth0 } from "@auth0/auth0-react";
+import FormLabel from "./FormLabel";
 
 export default function AdminEditTaskModal() {
     const { getAccessTokenSilently } = useAuth0();
@@ -92,30 +92,10 @@ export default function AdminEditTaskModal() {
     };
 
     return (
-        <article
-            className="
-        backdrop-blur-sm 
-        bg-[#22222240] 
-        fixed 
-        flex 
-        h-screen 
-        items-center
-        justify-center 
-        top-0 
-        w-screen
-        z-10
-        "
-        >
+        <article className="fixed  top-0  z-10  flex  h-screen  w-screen items-center  justify-center  bg-[#22222240] backdrop-blur-sm">
             <div
                 className="
-            bg-neutral-50
-            h-[90%]
-            overflow-auto
-            pb-32 rounded-lg
-            px-8
-            py-16
-            w-[90%]
-            max-w-lg
+            h-[90%] w-[90%] max-w-lg overflow-auto rounded-lg bg-neutral-50 px-8 py-16 pb-32
             "
             >
                 <h2
@@ -205,21 +185,14 @@ export default function AdminEditTaskModal() {
 
                     <button
                         type="submit"
-                        className="
-                        bg-neutral-500
-                        font-bold
-                        py-4 
-                        rounded-full 
-                        text-neutral-50
-                        text-xl
-                        "
+                        className=" rounded-full bg-neutral-500 py-4  text-xl  font-bold text-neutral-50"
                     >
                         Postar tarefa
                     </button>
 
                     <button
                         type="button"
-                        className="bg-neutral-200 py-4 rounded-full border-2 border-neutral-300"
+                        className="rounded-full border-2 border-neutral-300 bg-neutral-200 py-4"
                         onClick={() => dispatch(setEditModalHidden())}
                     >
                         cancelar

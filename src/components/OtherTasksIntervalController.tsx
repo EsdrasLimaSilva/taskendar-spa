@@ -1,13 +1,13 @@
-import { FormEvent, useRef } from "react";
-import { EMonth } from "../utils/dateUtils";
-import { useAppDispatch, useAppSelector } from "../lib/hooks";
 import { useAuth0 } from "@auth0/auth0-react";
+import { FormEvent, useRef } from "react";
 import {
     EVisualMode,
     fetchOtherTasksThunk,
     selectTasks,
     setOtherVisualization,
 } from "../lib/features/tasks/tasksSlice";
+import { useAppDispatch, useAppSelector } from "../lib/hooks";
+import { EMonth } from "../utils/dateUtils";
 
 export default function OtherTasksIntervalController() {
     const { getAccessTokenSilently } = useAuth0();
@@ -46,7 +46,7 @@ export default function OtherTasksIntervalController() {
             <select
                 ref={monthInputRef}
                 defaultValue={visual.month}
-                className="bg-neutral-50 text-xl px-4 py-2"
+                className="bg-neutral-50 px-4 py-2 text-xl"
             >
                 <option value={EMonth.JAN}>Janeiro</option>
                 <option value={EMonth.FEB}>Fevereiro</option>
@@ -64,7 +64,7 @@ export default function OtherTasksIntervalController() {
 
             <button
                 type="submit"
-                className="bg-neutral-400 text-neutral-50 text-xl font-bold py-2"
+                className="bg-neutral-400 py-2 text-xl font-bold text-neutral-50"
             >
                 buscar tarefas
             </button>

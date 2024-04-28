@@ -1,17 +1,17 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Home from "./pages/Home";
-import Admin from "./pages/Admin";
+import { useAuth0 } from "@auth0/auth0-react";
 import { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "./lib/hooks";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import LoadingComponent from "./components/LoadingComponent";
 import {
     fetchOtherTasksThunk,
     fetchTodayTasksThunk,
     selectTasks,
     setUserRegistered,
 } from "./lib/features/tasks/tasksSlice";
-import { useAuth0 } from "@auth0/auth0-react";
+import { useAppDispatch, useAppSelector } from "./lib/hooks";
+import Admin from "./pages/Admin";
+import Home from "./pages/Home";
 import { getUserData, registerUser } from "./utils/apiUtils";
-import LoadingComponent from "./components/LoadingComponent";
 
 export default function App() {
     const { user: authUser, isLoading, getAccessTokenSilently } = useAuth0();
