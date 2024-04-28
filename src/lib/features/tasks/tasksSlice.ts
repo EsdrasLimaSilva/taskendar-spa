@@ -213,11 +213,11 @@ const tasksSlice = createSlice({
         },
 
         setTargetEditTask(state, action: PayloadAction<string>) {
-            const taskTarget = [
-                ...state.taskList.today,
-                ...state.taskList.others,
-            ].find((tsk) => tsk._id === action.payload);
+            const tasks = state.search.active
+                ? [...state.search.tasks]
+                : [...state.taskList.today, ...state.taskList.others];
 
+            const taskTarget = tasks.find((tsk) => tsk._id === action.payload);
             state.targetEditTask = taskTarget || null;
         },
 
@@ -288,7 +288,12 @@ const tasksSlice = createSlice({
         builder.addCase(updateTaskThunk.fulfilled, (state, action) => {
             const updatedTask = action.payload;
             if (updatedTask) {
-                if (dateIsToday(new Date(updatedTask?.startsAt!))) {
+                if (state.search.active) {
+                    const taskIndex = state.search.tasks.findIndex(
+                        (tsk) => tsk._id === updatedTask._id,
+                    );
+                    state.search.tasks[taskIndex] = updatedTask;
+                } else if (dateIsToday(new Date(updatedTask?.startsAt!))) {
                     const taskIndex = state.taskList.today.findIndex(
                         (task) => task._id === updatedTask._id,
                     );
