@@ -16,7 +16,7 @@ export default function TaskCard({ task }: Props) {
     });
 
     return (
-        <article className="flex flex-col gap-6">
+        <article className="task-card flex flex-col gap-6">
             <header className="flex w-full flex-row items-end justify-between">
                 <h2 className="w-ful text-2xl">{task.title}</h2>
                 <h3 className="rounded-md bg-neutral-400 px-4 py-2 text-lg font-bold text-neutral-50">

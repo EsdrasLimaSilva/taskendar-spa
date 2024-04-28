@@ -37,7 +37,7 @@ describe("AdminEditTaskCard", () => {
     });
 
     afterAll(() => server.close());
-    afterEach(() => server.resetHandlers());
+    afterEach(() => server.resetHandlers(...successHandlers));
 
     it("Should render correctly", () => {
         expect(screen.getByTestId(ADMIN_CARD_TEST_ID)).toBeInTheDocument();
