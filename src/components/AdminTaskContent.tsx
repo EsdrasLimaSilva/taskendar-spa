@@ -8,7 +8,8 @@ export default function AdminTaskContent() {
     const { taskList, search, loadingTasks } = useAppSelector(selectTasks);
     const dispatch = useAppDispatch();
 
-    if (search.loading) return <TaskLoadingIndicator />;
+    if (search.loading || (loadingTasks.today && loadingTasks.others))
+        return <TaskLoadingIndicator />;
 
     if (search.active) {
         return (
