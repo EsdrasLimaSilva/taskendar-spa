@@ -2,6 +2,7 @@ import type { RenderOptions } from "@testing-library/react";
 import { render } from "@testing-library/react";
 import React, { PropsWithChildren } from "react";
 import { Provider } from "react-redux";
+import { EVisualMode, TaskType } from "../lib/features/tasks/tasksSlice";
 import { AppStore, RootState, makeStore } from "../lib/store";
 
 // Redux implementation for tests
@@ -15,7 +16,7 @@ export function renderWithProviders(
 ) {
     const {
         preloadedState = {},
-        store = makeStore(),
+        store = makeStore(preloadedState),
         ...renderOptions
     } = extendedRenderOptions;
 
@@ -28,3 +29,41 @@ export function renderWithProviders(
         ...render(ui, { wrapper: Wrapper, ...renderOptions }),
     };
 }
+
+/* Data */
+export const DummyInitalTestState: RootState = {
+    tasks: {
+        taskList: {
+            today: [],
+            others: [],
+        },
+
+        currentPage: 1,
+        editModal: { visible: true },
+        loadingTasks: {
+            others: false,
+            today: false,
+        },
+        search: {
+            active: false,
+            loading: false,
+            tasks: [],
+        },
+        targetEditTask: null,
+        userRegistered: true,
+        visual: {
+            mode: EVisualMode.DAY,
+            month: new Date().getMonth(),
+            year: new Date().getFullYear(),
+        },
+    },
+};
+
+export const dummyTask: TaskType = {
+    _id: "123456",
+    description: "Task Description",
+    uid: "auth0654",
+    endsAt: new Date().toISOString(),
+    startsAt: new Date().toISOString(),
+    title: "Dummy Tittle",
+};

@@ -9,7 +9,7 @@ import { ApiResponseType } from "../utils/apiResponseType";
 import { renderWithProviders } from "../utils/testUtils";
 
 // api implementation for tests
-export const handlers = [
+const handlers = [
     http.delete("/tasks/:taskId", async () => {
         await delay(200);
         const response: ApiResponseType = {

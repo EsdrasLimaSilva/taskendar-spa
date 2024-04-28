@@ -92,7 +92,10 @@ export default function AdminEditTaskModal() {
     };
 
     return (
-        <article className="fixed  top-0  z-10  flex  h-screen  w-screen items-center  justify-center  bg-[#22222240] backdrop-blur-sm">
+        <article
+            data-testid="admin-edit-task-modal"
+            className="fixed  top-0  z-10  flex  h-screen  w-screen items-center  justify-center  bg-[#22222240] backdrop-blur-sm"
+        >
             <div
                 className="
             h-[90%] w-[90%] max-w-lg overflow-auto rounded-lg bg-neutral-50 px-8 py-16 pb-32
@@ -101,8 +104,8 @@ export default function AdminEditTaskModal() {
                 <h2
                     className="
                 mb-8
-                text-2xl
                 text-center
+                text-2xl
                 "
                 >
                     Editor de tarefas
@@ -110,6 +113,7 @@ export default function AdminEditTaskModal() {
                 <form onSubmit={handleSubmit} className="flex flex-col gap-8">
                     <FormLabel labelTitle="Titulo">
                         <input
+                            data-testid="input-task-title"
                             type="text"
                             placeholder="Escrever um livro"
                             required
@@ -125,6 +129,7 @@ export default function AdminEditTaskModal() {
 
                     <FormLabel labelTitle="Descrição">
                         <textarea
+                            data-testid="input-task-description"
                             placeholder="Escrever um livro que expresse toda a minha percepção da realidade"
                             required
                             value={formState.taskDescription}
@@ -139,6 +144,7 @@ export default function AdminEditTaskModal() {
 
                     <FormLabel labelTitle="Data de início">
                         <input
+                            data-testid="input-task-start-date"
                             type="date"
                             value={formState.taskStartDate}
                             onChange={(e) => {
@@ -149,6 +155,7 @@ export default function AdminEditTaskModal() {
                             }}
                         />
                         <input
+                            data-testid="input-task-start-time"
                             type="time"
                             value={formState.taskStartTime}
                             onChange={(e) =>
@@ -162,6 +169,7 @@ export default function AdminEditTaskModal() {
 
                     <FormLabel labelTitle="Data de Fim">
                         <input
+                            data-testid="input-task-end-date"
                             type="date"
                             value={formState.taskEndDate}
                             onChange={(e) => {
@@ -172,6 +180,7 @@ export default function AdminEditTaskModal() {
                             }}
                         />
                         <input
+                            data-testid="input-task-end-time"
                             type="time"
                             value={formState.taskEndTime}
                             onChange={(e) =>
@@ -184,6 +193,7 @@ export default function AdminEditTaskModal() {
                     </FormLabel>
 
                     <button
+                        data-testid="edit-task-modal-submit-btn"
                         type="submit"
                         className=" rounded-full bg-neutral-500 py-4  text-xl  font-bold text-neutral-50"
                     >
