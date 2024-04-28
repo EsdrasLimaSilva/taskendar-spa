@@ -11,7 +11,11 @@ export default function SearchBar({ handleSearch }: Props) {
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         if (queryInputRef.current) {
-            const query = queryInputRef.current.value;
+            const query = queryInputRef.current.value.trim();
+            if (!query) {
+                alert("Insira um termo de pesquisa");
+                return;
+            }
             await handleSearch(query);
         }
     };
