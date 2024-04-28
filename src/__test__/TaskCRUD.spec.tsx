@@ -2,6 +2,7 @@ import * as auth0 from "@auth0/auth0-react";
 import { fireEvent, screen } from "@testing-library/react";
 import { setupServer } from "msw/node";
 import { BrowserRouter } from "react-router-dom";
+import { v4 as uuid } from "uuid";
 import { vi } from "vitest";
 import Admin from "../pages/Admin";
 import { toStringTimeHHMM, toStringYYYMMDD } from "../utils/dateUtils";
@@ -16,17 +17,18 @@ const server = setupServer(...successHandlers);
 
 vi.mock("@auth0/auth0-react");
 
-describe("Task Creation", () => {
+describe("Task CRUD", () => {
     const ADMIN_EDIT_MODAL_TEST_ID = "admin-edit-task-modal";
     const ADMIN_CREATE_TASK_BTN_TEST_ID = "admin-create-task-btn";
-    const ADMIN_TODAY_TASKS_CONTAINER_TEST_ID = "admin-today-tasks-container";
     // form
-    const TASK_TITLE_INPUT_TESTE_ID = "input-task-title";
-    const TASK_DESCRIPTION_INPUT_TESTE_ID = "input-task-description";
-    const TASK_STDATE_INPUT_TESTE_ID = "input-task-start-date";
-    const TASK_STTIME_INPUT_TESTE_ID = "input-task-start-time";
-    const TASK_NDDATE_INPUT_TESTE_ID = "input-task-end-date";
-    const TASK_NDTIME_INPUT_TESTE_ID = "input-task-end-time";
+    const TASK_TITLE_INPUT_TEST_ID = "input-task-title";
+    const TASK_DESCRIPTION_INPUT_TEST_ID = "input-task-description";
+    const TASK_STDATE_INPUT_TEST_ID = "input-task-start-date";
+    const TASK_STTIME_INPUT_TEST_ID = "input-task-start-time";
+    const TASK_NDDATE_INPUT_TEST_ID = "input-task-end-date";
+    const TASK_NDTIME_INPUT_TEST_ID = "input-task-end-time";
+    const TASK_SUBMIT_INPUT_TEST_ID = "edit-task-modal-submit-btn";
+    const EDIT_TASK_CARD_BTN = "edit-task-card-btn";
 
     beforeAll(() => {
         (auth0 as any).useAuth0 = vi.fn().mockReturnValue({
@@ -40,7 +42,7 @@ describe("Task Creation", () => {
     afterEach(() => server.resetHandlers());
     afterAll(() => server.close());
 
-    it("should create a task when submiting the form without a target task", async () => {
+    it("should CREATE a task when submiting the form without a target task", () => {
         // rendering the componet wrapped with redux
         renderWithProviders(
             <BrowserRouter>
@@ -59,21 +61,22 @@ describe("Task Creation", () => {
 
         fireEvent.click(showModalBtn);
 
-        const modal = screen.getByTestId(ADMIN_EDIT_MODAL_TEST_ID);
-
         // getting all inputs
-        const titleInput = screen.getByTestId(TASK_TITLE_INPUT_TESTE_ID);
+        const titleInput = screen.getByTestId(TASK_TITLE_INPUT_TEST_ID);
         const descriptionInput = screen.getByTestId(
-            TASK_DESCRIPTION_INPUT_TESTE_ID,
+            TASK_DESCRIPTION_INPUT_TEST_ID,
         );
-        const stDateInput = screen.getByTestId(TASK_STDATE_INPUT_TESTE_ID);
-        const stTimeInput = screen.getByTestId(TASK_STTIME_INPUT_TESTE_ID);
-        const ndDateInput = screen.getByTestId(TASK_NDDATE_INPUT_TESTE_ID);
-        const ndTimeInput = screen.getByTestId(TASK_NDTIME_INPUT_TESTE_ID);
+        const stDateInput = screen.getByTestId(TASK_STDATE_INPUT_TEST_ID);
+        const stTimeInput = screen.getByTestId(TASK_STTIME_INPUT_TEST_ID);
+        const ndDateInput = screen.getByTestId(TASK_NDDATE_INPUT_TEST_ID);
+        const ndTimeInput = screen.getByTestId(TASK_NDTIME_INPUT_TEST_ID);
+
+        const newTaskTitle = `My New Task ${uuid()}`;
 
         // setting up the data
         const task = {
             ...dummyTask,
+            title: newTaskTitle,
             startsAt: new Date().toISOString(),
             endsAt: new Date().toISOString(),
         };
@@ -97,14 +100,53 @@ describe("Task Creation", () => {
         fireEvent.change(ndDateInput, { target: { value: ndDate } });
         fireEvent.change(ndTimeInput, { target: { value: ndTime } });
 
-        // as tasks is from today, the new task should appear in today tasks
-        const container = await screen.findByTestId(
-            ADMIN_TODAY_TASKS_CONTAINER_TEST_ID,
+        // submiting the form
+        const submitButton = screen.getByTestId(TASK_SUBMIT_INPUT_TEST_ID);
+        fireEvent.click(submitButton);
+
+        expect(screen.findByText(newTaskTitle)).resolves.toBeInTheDocument();
+    });
+
+    it("should UPDATE a task when submiting the form without a target task", () => {
+        // rendering the componet wrapped with redux
+        renderWithProviders(
+            <BrowserRouter>
+                <Admin />
+            </BrowserRouter>,
+            {
+                preloadedState: {
+                    tasks: {
+                        ...DummyInitalTestState.tasks,
+                        taskList: {
+                            today: [
+                                {
+                                    ...dummyTask,
+                                    title: "Old Title",
+                                    startsAt: new Date().toISOString(),
+                                    endsAt: new Date().toISOString(),
+                                },
+                            ],
+                            others: [],
+                        },
+                    },
+                },
+            },
         );
 
-        expect(container.querySelector(".task-list")?.childNodes.length).toBe(
-            1,
-        );
+        const showModalBtn = screen.getByTestId(EDIT_TASK_CARD_BTN);
+        fireEvent.click(showModalBtn);
+
+        const newTaskTitle = `task ${uuid()}`;
+        // updating title
+        fireEvent.change(screen.getByTestId(TASK_TITLE_INPUT_TEST_ID), {
+            target: { value: newTaskTitle },
+        });
+
+        // submiting the form
+        const submitButton = screen.getByTestId(TASK_SUBMIT_INPUT_TEST_ID);
+        fireEvent.click(submitButton);
+
+        expect(screen.findByText(newTaskTitle)).resolves.toBeInTheDocument();
     });
 
     it("should not render the Edit modal at first", () => {

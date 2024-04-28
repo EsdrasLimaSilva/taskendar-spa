@@ -59,7 +59,7 @@ export default function AdminEditTaskCard({ task }: { task: TaskType }) {
                     <CgClose />
                 </button>
             </span>
-            <h4>{task.title}</h4>
+            <h4 data-testid="admin-edit-task-card-title">{task.title}</h4>
 
             <div className="item-center flex flex-row">
                 <button
@@ -69,14 +69,14 @@ export default function AdminEditTaskCard({ task }: { task: TaskType }) {
                 >
                     <IoMdTrash className="text-3xl" />
                 </button>
-                <button>
-                    <MdEdit
-                        className="text-3xl"
-                        onClick={() => {
-                            dispatch(setTargetEditTask(task._id));
-                            dispatch(setEditModalVisible());
-                        }}
-                    />
+                <button
+                    data-testid="edit-task-card-btn"
+                    onClick={() => {
+                        dispatch(setTargetEditTask(task._id));
+                        dispatch(setEditModalVisible());
+                    }}
+                >
+                    <MdEdit className="text-3xl" />
                 </button>
             </div>
         </li>
