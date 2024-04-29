@@ -40,8 +40,8 @@ export default function AdminEditTaskCard({ task }: { task: TaskType }) {
         >
             <span
                 data-testid="confirm-task-del-area"
-                className={`adm-confirm-area absolute bottom-0 right-0 top-0 flex w-[12%] min-w-[80px] translate-x-full flex-row items-center justify-around gap-2 border-2 border-neutral-200 bg-neutral-100 text-2xl transition-all [&>button]:text-3xl ${
-                    deleteConfirmationVisible && "translate-x-0"
+                className={`adm-confirm-area absolute bottom-0 right-0 top-0 flex w-[12%] min-w-[80px] translate-x-0 flex-row items-center justify-around gap-2 border-2 border-neutral-200 bg-neutral-100 text-2xl transition-all [&>button]:text-3xl ${
+                    !deleteConfirmationVisible && "translate-x-full"
                 }`}
             >
                 <button
