@@ -21,7 +21,6 @@ export default function App() {
 
     const getUserInfo = async () => {
         const token = await getAccessTokenSilently();
-        console.log(">>>>>>>>>", token);
         // trying to retrieve user data
         const user = await getUserData(token);
 
