@@ -52,7 +52,12 @@ export default function App() {
         }
     }, [authUser]);
 
-    if (isLoading) return <LoadingComponent />;
+    if (isLoading)
+        return (
+            <LoadingComponent>
+                <h2 className="animate-pulse italic">Tentando authenticar</h2>
+            </LoadingComponent>
+        );
     if (!authUser) return <LoginComponent />;
     if (!userRegistered) return <LoadingComponent />;
 
