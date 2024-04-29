@@ -17,7 +17,7 @@ function SelectButton({ label, ...rest }: RadioInputProps) {
         <button
             type="button"
             {...rest}
-            className="flex max-w-40 flex-grow-[1] items-center justify-center rounded-md border-2 bg-neutral-50 px-4 py-2 text-neutral-400 disabled:bg-neutral-400 disabled:text-neutral-50"
+            className="disabled:bg-primary-600 flex max-w-40 flex-grow-[1] items-center justify-center rounded-md border-2 bg-neutral-50 px-4 py-2 text-neutral-400 disabled:font-bold disabled:text-neutral-50"
         >
             {label}
         </button>

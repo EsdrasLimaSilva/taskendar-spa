@@ -11,14 +11,14 @@ interface VisualItemProps {
 const VisualCardItem = ({ unitValue, tasks }: VisualItemProps) => {
     return (
         <article className="visual-card-item grid h-full grid-cols-[64px_1fr] items-center gap-2 bg-neutral-50">
-            <h3 className="flex h-full w-full min-w-[64px] items-center justify-center bg-neutral-400 text-center text-xl font-bold text-neutral-50">
+            <h3 className="text-primary-600  flex h-full w-full min-w-[64px] items-center justify-center  bg-neutral-50 text-center text-xl font-bold">
                 {unitValue}
             </h3>
             <ul className="flex-grow-[1]">
                 {tasks.map((tks) => (
                     <li
                         key={tks._id}
-                        className="border-b-[1px] border-neutral-50 bg-neutral-400 px-4 py-4 text-neutral-50"
+                        className="bg-primary-600 border-b-[1px] border-neutral-50 px-4 py-4 text-neutral-50"
                     >
                         <strong className="block text-lg font-normal">
                             {tks.title}
