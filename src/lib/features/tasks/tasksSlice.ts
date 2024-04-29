@@ -6,7 +6,7 @@ import {
     searchTasks,
     updateTask,
 } from "../../../utils/apiUtils";
-import { dateIsToday } from "../../../utils/dateUtils";
+import { dateIsInThisMonth, dateIsToday } from "../../../utils/dateUtils";
 import { RootState } from "../../store";
 
 /*============ Types ============*/
@@ -329,7 +329,7 @@ const tasksSlice = createSlice({
                     state.search.tasks.push(updatedTask);
                 } else if (dateIsToday(new Date(updatedTask.startsAt!))) {
                     state.taskList.today.push(updatedTask);
-                } else {
+                } else if (dateIsInThisMonth(new Date(updatedTask.startsAt))) {
                     state.taskList.others.push(updatedTask);
                 }
             }

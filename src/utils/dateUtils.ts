@@ -35,8 +35,6 @@ export function getLastDay(year: number, month: number) {
  * @returns 0 if date1 == date2
  */
 export function dateCompare(date1: Date, date2: Date) {
-    console.log(date1);
-    console.log(date2);
     return date1.getMilliseconds() - date2.getMilliseconds();
 }
 
@@ -68,6 +66,11 @@ export function dateIsToday(date1: Date) {
         currentDate.getMonth() === date1.getMonth() &&
         currentDate.getDate() === date1.getDate()
     );
+}
+
+export function dateIsInThisMonth(date: Date): boolean {
+    const currentDate = new Date();
+    return date.getMonth() === currentDate.getMonth();
 }
 
 export function getWeeks(
