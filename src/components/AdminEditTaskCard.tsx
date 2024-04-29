@@ -48,6 +48,7 @@ export default function AdminEditTaskCard({ task }: { task: TaskType }) {
                     data-testid="confirm-task-del-btn"
                     type="button"
                     onClick={deleteTask}
+                    className="text-primary-500 font-bold"
                 >
                     <BiCheck />
                 </button>
@@ -55,6 +56,7 @@ export default function AdminEditTaskCard({ task }: { task: TaskType }) {
                     data-testid="cancel-task-del-btn"
                     type="button"
                     onClick={hideConfirmation}
+                    className="text-primary-500 font-bold"
                 >
                     <CgClose />
                 </button>
@@ -67,7 +69,7 @@ export default function AdminEditTaskCard({ task }: { task: TaskType }) {
                     type="button"
                     onClick={showConfirmation}
                 >
-                    <IoMdTrash className="text-3xl" />
+                    <IoMdTrash className="text-3xl font-bold" />
                 </button>
                 <button
                     data-testid="edit-task-card-btn"
@@ -76,7 +78,7 @@ export default function AdminEditTaskCard({ task }: { task: TaskType }) {
                         dispatch(setEditModalVisible());
                     }}
                 >
-                    <MdEdit className="text-3xl" />
+                    <MdEdit className="text-3xl font-bold" />
                 </button>
             </div>
         </li>

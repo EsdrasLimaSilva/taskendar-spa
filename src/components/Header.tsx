@@ -13,7 +13,7 @@ export default function Header({ linkPath, linkText }: Props) {
 
             <Link
                 to={linkPath}
-                className="flex items-center justify-center rounded-md bg-neutral-400 px-8 text-base font-bold text-neutral-50"
+                className="bg-primary-500 flex items-center justify-center rounded-md px-8 text-base font-bold text-neutral-50"
             >
                 {linkText}
             </Link>
