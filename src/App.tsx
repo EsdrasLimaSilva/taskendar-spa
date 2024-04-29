@@ -54,8 +54,8 @@ export default function App() {
     }, [authUser]);
 
     if (isLoading) return <LoadingComponent />;
-    if (!authUser) <LoginComponent />;
-    if (!userRegistered) <LoadingComponent />;
+    if (!authUser) return <LoginComponent />;
+    if (!userRegistered) return <LoadingComponent />;
 
     return (
         <BrowserRouter>
