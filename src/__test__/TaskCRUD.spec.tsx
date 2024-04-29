@@ -34,6 +34,11 @@ describe("Task CRUD", () => {
     const TASK_NDTIME_INPUT_TEST_ID = "input-task-end-time";
     const TASK_SUBMIT_INPUT_TEST_ID = "edit-task-modal-submit-btn";
     const EDIT_TASK_CARD_BTN = "edit-task-card-btn";
+    const TASK_LOADING_INDICATOR_TEST_ID = "task-loading-indicator";
+    // search
+    const TASK_SEARCH_INPUT_TEST_ID = "task-search-input";
+    const TASK_SUBMIT_SEARCH_BTN = "submit-search-btn";
+    const SEARCH_TASK_LIST_CONTAINER = "search-task-list-container";
     // actions btn
     const CONFIRM_DEL_TASK_BTN_TEST_ID = "confirm-task-del-btn";
 
@@ -288,6 +293,40 @@ describe("Task CRUD", () => {
         expect(
             otherTasksList.querySelector(".task-card-item"),
         ).toBeInTheDocument();
+    });
+
+    it("Should show all searched taks", () => {
+        /*
+        !IMPORTANT: The result of this test DEPENDS ON the implementation of the search endpoint in the mockApi!
+        */
+
+        // rendering the componet wrapped with redux
+        renderWithProviders(
+            <BrowserRouter>
+                <Admin />
+            </BrowserRouter>,
+            {
+                preloadedState: {
+                    tasks: {
+                        ...DummyInitalTestState.tasks,
+                    },
+                },
+            },
+        );
+
+        const searchInput = screen.getByTestId(TASK_SEARCH_INPUT_TEST_ID);
+        const submitSearchBtn = screen.getByTestId(TASK_SUBMIT_SEARCH_BTN);
+
+        act(() => {
+            // filling the form (MUST be filled even though not used in the mock api)
+            fireEvent.change(searchInput, { target: { value: "dummy" } });
+            // submiting the form
+            fireEvent.click(submitSearchBtn);
+        });
+
+        expect(
+            screen.findByTestId(SEARCH_TASK_LIST_CONTAINER),
+        ).resolves.toBeInTheDocument();
     });
 
     it("should not render the Edit modal at first", () => {

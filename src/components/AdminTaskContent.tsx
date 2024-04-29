@@ -24,6 +24,7 @@ export default function AdminTaskContent() {
                 <AdminTaskContainer
                     tasks={search.tasks}
                     sectionTitle="Tarefas encontradas"
+                    testId="search-task-list-container"
                 />
             </section>
         );

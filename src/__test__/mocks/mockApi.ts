@@ -37,6 +37,18 @@ const successHandlers = [
         return HttpResponse.json(response);
     }),
 
+    http.get(`${BASE_URL}/tasks/search/:query`, async () => {
+        await delay(200);
+        const response: ApiResponseType = {
+            ok: true,
+            data: {
+                tasks: [{ ...dummyTask }, { ...dummyTask }],
+            },
+            message: "User found",
+        };
+        return HttpResponse.json(response);
+    }),
+
     http.post(`${BASE_URL}/tasks`, async ({ request }) => {
         const body = (await request.json()) as CreateTaskType;
 

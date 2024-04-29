@@ -26,6 +26,7 @@ export default function SearchBar({ handleSearch }: Props) {
             onSubmit={handleSubmit}
         >
             <input
+                data-testid="task-search-input"
                 ref={queryInputRef}
                 type="text"
                 placeholder="Busque por uma tarefa"
@@ -33,6 +34,7 @@ export default function SearchBar({ handleSearch }: Props) {
             />
 
             <button
+                data-testid="submit-search-btn"
                 type="submit"
                 className="flex w-[25%] max-w-[200px] items-center justify-center bg-neutral-500 text-neutral-50"
             >
