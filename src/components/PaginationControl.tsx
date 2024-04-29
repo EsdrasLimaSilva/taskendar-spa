@@ -12,7 +12,7 @@ export default function PaginationControl() {
             {taskList.today.map((tks, i) => (
                 <li
                     key={tks._id}
-                    className={`flex h-[48px] w-[48px] items-center justify-center rounded-full border-[1px] border-neutral-600 bg-neutral-50 ${
+                    className={`flex h-[48px] w-[48px] cursor-pointer items-center justify-center rounded-full border-[1px] border-neutral-600 bg-neutral-50 ${
                         i + 1 == currentPage && "bg-neutral-600 text-neutral-50"
                     }`}
                     onClick={() => dispatch(goToPage(i + 1))}
