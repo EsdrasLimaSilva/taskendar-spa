@@ -1,4 +1,4 @@
-# Taskendar
+# Taskendar - Frontend
 
 This repository contains a SPA developed to handle Tasks based on date
 
