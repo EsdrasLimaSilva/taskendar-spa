@@ -36,7 +36,7 @@ export default function AdminEditTaskCard({ task }: { task: TaskType }) {
     return (
         <li
             data-testid="admin-task-card"
-            className=" item-center relative flex justify-between overflow-clip rounded-md bg-neutral-50 p-4 text-xl text-neutral-600"
+            className="task-card-item item-center relative flex justify-between overflow-clip rounded-md bg-neutral-50 p-4 text-xl text-neutral-600"
         >
             <span
                 data-testid="confirm-task-del-area"

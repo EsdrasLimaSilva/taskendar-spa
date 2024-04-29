@@ -1,6 +1,7 @@
 import * as auth0 from "@auth0/auth0-react";
 import { fireEvent, screen } from "@testing-library/react";
 import { setupServer } from "msw/node";
+import { act } from "react-dom/test-utils";
 import { BrowserRouter } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import { vi } from "vitest";
@@ -18,8 +19,12 @@ const server = setupServer(...successHandlers);
 vi.mock("@auth0/auth0-react");
 
 describe("Task CRUD", () => {
+    // general
     const ADMIN_EDIT_MODAL_TEST_ID = "admin-edit-task-modal";
+    const ADMIN_EDIT_CARD_TEST_ID = "admin-task-card";
     const ADMIN_CREATE_TASK_BTN_TEST_ID = "admin-create-task-btn";
+    const ADMIN_TODAY_TASK_LIST_CONTAINER = "admin-today-tasks-container";
+    const ADMIN_OTHER_TASK_LIST_CONTAINER = "admin-other-tasks-container";
     // form
     const TASK_TITLE_INPUT_TEST_ID = "input-task-title";
     const TASK_DESCRIPTION_INPUT_TEST_ID = "input-task-description";
@@ -29,6 +34,8 @@ describe("Task CRUD", () => {
     const TASK_NDTIME_INPUT_TEST_ID = "input-task-end-time";
     const TASK_SUBMIT_INPUT_TEST_ID = "edit-task-modal-submit-btn";
     const EDIT_TASK_CARD_BTN = "edit-task-card-btn";
+    // actions btn
+    const CONFIRM_DEL_TASK_BTN_TEST_ID = "confirm-task-del-btn";
 
     beforeAll(() => {
         (auth0 as any).useAuth0 = vi.fn().mockReturnValue({
@@ -59,7 +66,9 @@ describe("Task CRUD", () => {
 
         const showModalBtn = screen.getByTestId(ADMIN_CREATE_TASK_BTN_TEST_ID);
 
-        fireEvent.click(showModalBtn);
+        act(() => {
+            fireEvent.click(showModalBtn);
+        });
 
         // getting all inputs
         const titleInput = screen.getByTestId(TASK_TITLE_INPUT_TEST_ID);
@@ -90,19 +99,21 @@ describe("Task CRUD", () => {
         const ndDate = toStringYYYMMDD(endDate);
         const ndTime = toStringTimeHHMM(endDate);
 
-        // filling all forms
-        fireEvent.change(titleInput, { target: { value: task.title } });
-        fireEvent.change(descriptionInput, {
-            target: { value: task.description },
+        act(() => {
+            // filling all forms
+            fireEvent.change(titleInput, { target: { value: task.title } });
+            fireEvent.change(descriptionInput, {
+                target: { value: task.description },
+            });
+            fireEvent.change(stDateInput, { target: { value: stDate } });
+            fireEvent.change(stTimeInput, { target: { value: stTime } });
+            fireEvent.change(ndDateInput, { target: { value: ndDate } });
+            fireEvent.change(ndTimeInput, { target: { value: ndTime } });
         });
-        fireEvent.change(stDateInput, { target: { value: stDate } });
-        fireEvent.change(stTimeInput, { target: { value: stTime } });
-        fireEvent.change(ndDateInput, { target: { value: ndDate } });
-        fireEvent.change(ndTimeInput, { target: { value: ndTime } });
 
         // submiting the form
         const submitButton = screen.getByTestId(TASK_SUBMIT_INPUT_TEST_ID);
-        fireEvent.click(submitButton);
+        act(() => fireEvent.click(submitButton));
 
         expect(screen.findByText(newTaskTitle)).resolves.toBeInTheDocument();
     });
@@ -134,19 +145,149 @@ describe("Task CRUD", () => {
         );
 
         const showModalBtn = screen.getByTestId(EDIT_TASK_CARD_BTN);
-        fireEvent.click(showModalBtn);
+        act(() => {
+            fireEvent.click(showModalBtn);
+        });
 
         const newTaskTitle = `task ${uuid()}`;
-        // updating title
-        fireEvent.change(screen.getByTestId(TASK_TITLE_INPUT_TEST_ID), {
-            target: { value: newTaskTitle },
+        // submiting the form
+        const submitButton = screen.getByTestId(TASK_SUBMIT_INPUT_TEST_ID);
+
+        act(() => {
+            // updating title
+            fireEvent.change(screen.getByTestId(TASK_TITLE_INPUT_TEST_ID), {
+                target: { value: newTaskTitle },
+            });
+            fireEvent.click(submitButton);
         });
+
+        expect(screen.findByText(newTaskTitle)).resolves.toBeInTheDocument();
+    });
+
+    it("should DELETE correctly the task", () => {
+        // rendering the componet wrapped with redux
+        renderWithProviders(
+            <BrowserRouter>
+                <Admin />
+            </BrowserRouter>,
+            {
+                preloadedState: {
+                    tasks: {
+                        ...DummyInitalTestState.tasks,
+                        taskList: {
+                            today: [
+                                {
+                                    ...dummyTask,
+                                    title: "Task to be deleted",
+                                    startsAt: new Date().toISOString(),
+                                    endsAt: new Date().toISOString(),
+                                },
+                            ],
+                            others: [],
+                        },
+                    },
+                },
+            },
+        );
+
+        // should be in the document at first
+        expect(screen.getByTestId(ADMIN_EDIT_CARD_TEST_ID)).toBeInTheDocument();
+
+        const confirmDelBtn = screen.getByTestId(CONFIRM_DEL_TASK_BTN_TEST_ID);
+        act(() => {
+            fireEvent.click(confirmDelBtn);
+        });
+
+        // should not to be there when removed
+        expect(
+            screen.queryByTestId(ADMIN_EDIT_MODAL_TEST_ID),
+        ).not.toBeInTheDocument();
+    });
+
+    it("Should MOVE from TODAY TASKS to OTHER TASKS when updating the start date to not be today", async () => {
+        // rendering the componet wrapped with redux
+        renderWithProviders(
+            <BrowserRouter>
+                <Admin />
+            </BrowserRouter>,
+            {
+                preloadedState: {
+                    tasks: {
+                        ...DummyInitalTestState.tasks,
+                        taskList: {
+                            today: [
+                                {
+                                    ...dummyTask,
+                                    title: "Old Title",
+                                    startsAt: new Date().toISOString(),
+                                    endsAt: new Date().toISOString(),
+                                },
+                            ],
+                            others: [],
+                        },
+                    },
+                },
+            },
+        );
+
+        const showModalBtn = screen.getByTestId(EDIT_TASK_CARD_BTN);
+        act(() => {
+            fireEvent.click(showModalBtn);
+        });
+
+        const newTaskTitle = `task ${uuid()}`;
+        act(() => {
+            // updating title
+            fireEvent.change(screen.getByTestId(TASK_TITLE_INPUT_TEST_ID), {
+                target: { value: newTaskTitle },
+            });
+        });
+
+        // getting the date
+        const currentDate = new Date();
+        const day = currentDate.getDate() === 1 ? 2 : 1;
+        currentDate.setDate(day);
+
+        // getting stDate, stTime, ndDate, ndTime
+        const stDate = toStringYYYMMDD(currentDate);
+        const stTime = toStringTimeHHMM(currentDate);
+        const ndDate = toStringYYYMMDD(currentDate);
+        const ndTime = toStringTimeHHMM(currentDate);
+
+        // getting inputs
+        const stDateInput = screen.getByTestId(TASK_STDATE_INPUT_TEST_ID);
+        const stTimeInput = screen.getByTestId(TASK_STTIME_INPUT_TEST_ID);
+        const ndDateInput = screen.getByTestId(TASK_NDDATE_INPUT_TEST_ID);
+        const ndTimeInput = screen.getByTestId(TASK_NDTIME_INPUT_TEST_ID);
 
         // submiting the form
         const submitButton = screen.getByTestId(TASK_SUBMIT_INPUT_TEST_ID);
-        fireEvent.click(submitButton);
+        act(() => {
+            // filling form
+            fireEvent.change(stDateInput, { target: { value: stDate } });
+            fireEvent.change(stTimeInput, { target: { value: stTime } });
+            fireEvent.change(ndDateInput, { target: { value: ndDate } });
+            fireEvent.change(ndTimeInput, { target: { value: ndTime } });
+            // submiting the form
+            fireEvent.click(submitButton);
+        });
 
-        expect(screen.findByText(newTaskTitle)).resolves.toBeInTheDocument();
+        await screen.findByTestId(ADMIN_EDIT_MODAL_TEST_ID);
+
+        const todayTasksList = await screen.findByTestId(
+            ADMIN_TODAY_TASK_LIST_CONTAINER,
+        );
+        const otherTasksList = await screen.findByTestId(
+            ADMIN_OTHER_TASK_LIST_CONTAINER,
+        );
+
+        expect(
+            todayTasksList.querySelector(".task-card-item"),
+        ).not.toBeInTheDocument();
+
+        expect(
+            otherTasksList.querySelector(".task-card-item"),
+        ).toBeInTheDocument();
     });
 
     it("should not render the Edit modal at first", () => {

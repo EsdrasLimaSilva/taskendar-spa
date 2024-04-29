@@ -311,23 +311,26 @@ const tasksSlice = createSlice({
         });
         // update task
         builder.addCase(updateTaskThunk.fulfilled, (state, action) => {
-            const updatedTask = action.payload;
+            const updatedTask = action.payload!;
+
+            // removing from tasks because before the update maybe the task was on another part(today or other)
+            state.taskList.today = state.taskList.today.filter(
+                (tsk) => tsk._id !== updatedTask._id,
+            );
+            state.taskList.others = state.taskList.others.filter(
+                (tsk) => tsk._id !== updatedTask._id,
+            );
+            state.search.tasks = state.search.tasks.filter(
+                (tsk) => tsk._id !== updatedTask._id,
+            );
+
             if (updatedTask) {
                 if (state.search.active) {
-                    const taskIndex = state.search.tasks.findIndex(
-                        (tsk) => tsk._id === updatedTask._id,
-                    );
-                    state.search.tasks[taskIndex] = updatedTask;
-                } else if (dateIsToday(new Date(updatedTask?.startsAt!))) {
-                    const taskIndex = state.taskList.today.findIndex(
-                        (task) => task._id === updatedTask._id,
-                    );
-                    state.taskList.today[taskIndex] = updatedTask;
+                    state.search.tasks.push(updatedTask);
+                } else if (dateIsToday(new Date(updatedTask.startsAt!))) {
+                    state.taskList.today.push(updatedTask);
                 } else {
-                    const taskIndex = state.taskList.others.findIndex(
-                        (task) => task._id === updatedTask._id,
-                    );
-                    state.taskList.others[taskIndex] = updatedTask;
+                    state.taskList.others.push(updatedTask);
                 }
             }
 
