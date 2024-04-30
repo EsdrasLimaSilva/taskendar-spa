@@ -6,7 +6,7 @@ interface Props {
     task: TaskType;
 }
 
-export default function TaskCard({ task }: Props) {
+export default function TodayTaskCard({ task }: Props) {
     const startsAt = new Date(task.startsAt);
     const endsAt = new Date(task.endsAt);
 
@@ -18,7 +18,7 @@ export default function TaskCard({ task }: Props) {
     return (
         <article className="task-card flex flex-col gap-6">
             <header className="flex w-full flex-row items-end justify-between">
-                <h2 className="w-ful text-2xl">{task.title}</h2>
+                <h2 className="w-ful text-3xl">{task.title}</h2>
                 <h3 className="rounded-md bg-neutral-400 px-4 py-2 text-lg font-bold text-neutral-50">
                     {startsAt.getHours()}:
                     {startsAt.getMinutes().toString().padStart(2, "0")}h

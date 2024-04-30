@@ -15,6 +15,7 @@ export interface CreateTaskType {
     description: string;
     startsAt: string;
     endsAt: string;
+    done: boolean;
 }
 
 export interface UpdateTaskType extends CreateTaskType {

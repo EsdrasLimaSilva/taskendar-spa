@@ -36,6 +36,7 @@ export default function AdminEditTaskModal() {
         taskEndTime: targetEditTask?.endsAt
             ? toStringTimeHHMM(new Date(targetEditTask.endsAt))
             : toStringTimeHHMM(new Date()),
+        done: targetEditTask?.done ? targetEditTask.done : false,
     });
 
     /**
@@ -52,6 +53,7 @@ export default function AdminEditTaskModal() {
                 taskEndTime,
                 taskDescription,
                 taskTitle,
+                done,
             } = formState;
 
             // converting to date
@@ -71,6 +73,7 @@ export default function AdminEditTaskModal() {
                 title: taskTitle,
                 startsAt: tskStartDate.toISOString(),
                 endsAt: tskEndDate.toISOString(),
+                done,
             };
 
             const token = await getAccessTokenSilently();
@@ -142,6 +145,23 @@ export default function AdminEditTaskModal() {
                         />
                     </FormLabel>
 
+                    <FormLabel
+                        labelTitle="Concluída"
+                        className={`rounded-full border-2 border-neutral-500 py-2  text-center transition-all ${formState.done && "bg-success-500 border-transparent font-bold text-neutral-50"}`}
+                    >
+                        <input
+                            type="checkbox"
+                            className="w-0"
+                            checked={formState.done}
+                            onChange={(e) =>
+                                setFormState((prev) => ({
+                                    ...prev,
+                                    done: e.target.checked,
+                                }))
+                            }
+                        />
+                    </FormLabel>
+
                     <FormLabel labelTitle="Data de início">
                         <input
                             data-testid="input-task-start-date"
@@ -195,7 +215,7 @@ export default function AdminEditTaskModal() {
                     <button
                         data-testid="edit-task-modal-submit-btn"
                         type="submit"
-                        className=" rounded-full bg-neutral-500 py-4  text-xl  font-bold text-neutral-50"
+                        className=" bg-action-500 rounded-full py-4  text-xl  font-bold text-neutral-50"
                     >
                         Postar tarefa
                     </button>
