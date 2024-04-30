@@ -3,7 +3,7 @@ import {
     TaskType,
     UpdateTaskType,
 } from "../lib/features/tasks/tasksSlice";
-import { ApiResponseType } from "./apiResponseType";
+import { ApiResponseType, HolidayResponseType } from "./apiResponseType";
 
 export const BASE_URL = "http://localhost:3333";
 
@@ -142,4 +142,14 @@ export async function searchTasks(
     const tasks = apiResponse.data.tasks || [];
 
     return [...tasks];
+}
+
+export async function getHolidays(year: number) {
+    year = year || new Date().getFullYear();
+    const response = await fetch(
+        `https://date.nager.at/api/v3/PublicHolidays/${year}/BR`,
+    );
+    const data: HolidayResponseType = await response.json();
+
+    console.log(data);
 }

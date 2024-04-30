@@ -26,6 +26,8 @@ export interface UpdateTaskType extends CreateTaskType {
 export interface TaskType extends CreateTaskType {
     _id: string;
     uid: string;
+    isHoliday: boolean;
+    holidayName: string | null;
 }
 
 export enum ETaskStateStatus {
