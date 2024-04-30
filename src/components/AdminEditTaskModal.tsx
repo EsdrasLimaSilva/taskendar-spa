@@ -147,7 +147,7 @@ export default function AdminEditTaskModal() {
 
                     <FormLabel
                         labelTitle="Concluída"
-                        className={`rounded-full border-2 border-neutral-500 py-2  text-center transition-all ${formState.done && "bg-success-500 border-transparent font-bold text-neutral-50"}`}
+                        className={`rounded-full border-2 border-neutral-500 py-2  text-center transition-all ${formState.done && "border-transparent bg-success-500 font-bold text-neutral-50"}`}
                     >
                         <input
                             type="checkbox"
@@ -215,7 +215,7 @@ export default function AdminEditTaskModal() {
                     <button
                         data-testid="edit-task-modal-submit-btn"
                         type="submit"
-                        className=" bg-action-500 rounded-full py-4  text-xl  font-bold text-neutral-50"
+                        className=" rounded-full bg-action-500 py-4  text-xl  font-bold text-neutral-50"
                     >
                         Postar tarefa
                     </button>
