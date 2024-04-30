@@ -1,5 +1,6 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { intervalToDuration } from "date-fns";
+import { PiFlagBannerFill } from "react-icons/pi";
 import {
     TaskType,
     selectTasks,
@@ -41,6 +42,12 @@ export default function TodayTaskCard({ task }: Props) {
         <article className="task-card flex flex-col gap-6">
             <header className="flex w-full flex-row items-end justify-between gap-2">
                 <div>
+                    {task.isHoliday && (
+                        <h5 className="flex items-center text-action-500">
+                            <PiFlagBannerFill /> Essa tarefa começa num feriado
+                            - {task.holidayName}
+                        </h5>
+                    )}
                     <h2 className="w-ful text-3xl">{task.title}</h2>
                 </div>
                 <h3 className="w-24 rounded-md bg-neutral-400 px-4 py-2 text-center text-lg font-bold text-neutral-50">
