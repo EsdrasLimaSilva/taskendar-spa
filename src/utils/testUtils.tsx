@@ -56,6 +56,11 @@ export const DummyInitalTestState: RootState = {
             month: new Date().getMonth(),
             year: new Date().getFullYear(),
         },
+
+        updatingTaskDoneState: {
+            loading: false,
+            taskId: "",
+        },
     },
 };
 
@@ -66,4 +71,5 @@ export const dummyTask: TaskType = {
     endsAt: new Date().toISOString(),
     startsAt: new Date().toISOString(),
     title: "Dummy Tittle",
+    done: false,
 };

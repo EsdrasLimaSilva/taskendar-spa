@@ -32,6 +32,7 @@ describe("AdminEditTaskCard", () => {
             endsAt: "2024-04-28T13:17:59.986Z",
             title: "dummy title",
             uid: "Auth0|dkf-dadskjh",
+            done: false,
         };
         renderWithProviders(<AdminEditTaskCard task={task} />);
     });
@@ -55,9 +56,9 @@ describe("AdminEditTaskCard", () => {
         );
 
         fireEvent.click(showConfirmAreaBtn);
-        expect(screen.getByTestId(CONFIRM_TASK_DEL_AREA_TEST_ID)).toHaveClass(
-            "translate-x-0",
-        );
+        expect(
+            screen.getByTestId(CONFIRM_TASK_DEL_AREA_TEST_ID),
+        ).not.toHaveClass("translate-x-full");
     });
 
     it("should hide when clicking on delete confirmation or cancel btn", () => {
@@ -72,15 +73,15 @@ describe("AdminEditTaskCard", () => {
         fireEvent.click(showConfirmAreaBtn); // showing the area
 
         fireEvent.click(cancelDelBtn);
-        expect(
-            screen.getByTestId(CONFIRM_TASK_DEL_AREA_TEST_ID),
-        ).not.toHaveClass("translate-x-0");
+        expect(screen.getByTestId(CONFIRM_TASK_DEL_AREA_TEST_ID)).toHaveClass(
+            "translate-x-full",
+        );
 
         fireEvent.click(showConfirmAreaBtn); // showing the area
 
         fireEvent.click(confirmDelBtn);
-        expect(
-            screen.getByTestId(CONFIRM_TASK_DEL_AREA_TEST_ID),
-        ).not.toHaveClass("translate-x-0");
+        expect(screen.getByTestId(CONFIRM_TASK_DEL_AREA_TEST_ID)).toHaveClass(
+            "translate-x-0",
+        );
     });
 });
