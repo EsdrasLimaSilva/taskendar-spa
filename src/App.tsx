@@ -59,7 +59,15 @@ export default function App() {
             </LoadingComponent>
         );
     if (!authUser) return <LoginComponent />;
-    if (!userRegistered) return <LoadingComponent />;
+    if (!userRegistered)
+        return (
+            <main className="flex h-screen items-center justify-center px-2">
+                <p className="text-center text-lg">
+                    Something wen wrong, make sure Auth0 is correctly setup and
+                    the backend application is running
+                </p>
+            </main>
+        );
 
     return (
         <BrowserRouter>
