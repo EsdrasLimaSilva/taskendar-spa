@@ -1,12 +1,23 @@
+import { useAuth0 } from "@auth0/auth0-react";
 import { intervalToDuration } from "date-fns";
-import { TaskType } from "../lib/features/tasks/tasksSlice";
+import {
+    TaskType,
+    selectTasks,
+    updateTaskDoneStateThunk,
+} from "../lib/features/tasks/tasksSlice";
+import { useAppDispatch, useAppSelector } from "../lib/hooks";
 import DurationCardItem from "./DurationCardItem";
+import TaskLoadingIndicator from "./TaskLoadingIndicator";
 
 interface Props {
     task: TaskType;
 }
 
 export default function TodayTaskCard({ task }: Props) {
+    const { updatingTaskDoneState } = useAppSelector(selectTasks);
+    const { getAccessTokenSilently } = useAuth0();
+    const dispatch = useAppDispatch();
+
     const startsAt = new Date(task.startsAt);
     const endsAt = new Date(task.endsAt);
 
@@ -14,6 +25,17 @@ export default function TodayTaskCard({ task }: Props) {
         start: startsAt,
         end: endsAt,
     });
+
+    const updateDoneState = async () => {
+        const token = await getAccessTokenSilently();
+        dispatch(
+            updateTaskDoneStateThunk({
+                taskId: task._id,
+                done: !task.done,
+                token,
+            }),
+        );
+    };
 
     return (
         <article className="task-card flex flex-col gap-6">
@@ -26,6 +48,20 @@ export default function TodayTaskCard({ task }: Props) {
                     {startsAt.getMinutes().toString().padStart(2, "0")}h
                 </h3>
             </header>
+            {updatingTaskDoneState.loading &&
+            updatingTaskDoneState.taskId === task._id ? (
+                <TaskLoadingIndicator empty />
+            ) : (
+                <button
+                    type="button"
+                    className="mx-auto w-full max-w-xs rounded-md border-2 border-neutral-500 py-2 text-lg text-neutral-500"
+                    onClick={updateDoneState}
+                >
+                    {task.done
+                        ? "Marcar como incompleta"
+                        : "Marcar como conclúida"}
+                </button>
+            )}
             <span
                 className={` block h-2 w-full rounded-full ${task.done ? " bg-success-500" : "bg-warning-500"}`}
             />

@@ -64,7 +64,7 @@ export default function OtherTasksIntervalController() {
 
             <button
                 type="submit"
-                className="bg-primary-500 py-2 text-xl font-bold text-neutral-50"
+                className="bg-neutral-500 py-2 text-xl font-bold text-neutral-50"
             >
                 buscar tarefas
             </button>
