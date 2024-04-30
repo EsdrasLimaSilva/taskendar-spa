@@ -24,7 +24,7 @@ To run this application you'll need a up and running Auth0 application. Create a
 ```js
 VITE_AUTH0_DOMAIN = yourAuth0DomainHere;
 VITE_AUTH0_CLIENT_ID = yourAuth0ClientIdHere;
-VITE_AUTH0_AUDIENCE = yourApiAudience; //api audience
+VITE_AUTH0_AUDIENCE = yourApiAudience;
 VITE_API_URL = theApiUrlRunning;
 ```
 
