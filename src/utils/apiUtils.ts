@@ -98,6 +98,23 @@ export async function updateTask(
     return apiResponse.data.task;
 }
 
+export async function changeTaskDoneState(
+    taskId: string,
+    done: boolean,
+    token: string,
+): Promise<boolean> {
+    const apiResponse = await fetchApi("/tasks", {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ taskId, done }),
+    });
+
+    return apiResponse.ok;
+}
+
 export async function deleteTask(taskId: string, token: string) {
     const apiResponse = await fetchApi(`/tasks/${taskId}`, {
         method: "DELETE",

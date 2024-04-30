@@ -1,7 +1,7 @@
 import { selectTasks } from "../lib/features/tasks/tasksSlice";
 import { useAppSelector } from "../lib/hooks";
-import TaskCard from "./TaskCard";
 import TaskLoadingIndicator from "./TaskLoadingIndicator";
+import TodayTaskCard from "./TodayTaskCard";
 
 export default function TodayTasksContent() {
     const { taskList, currentPage, loadingTasks } = useAppSelector(selectTasks);
@@ -14,7 +14,7 @@ export default function TodayTasksContent() {
                 Tarefas de hoje
             </h2>
             {taskList.today.length > 0 ? (
-                <TaskCard task={taskList.today[currentPage - 1]} />
+                <TodayTaskCard task={taskList.today[currentPage - 1]} />
             ) : (
                 <h2 data-testid="empty-tasks-warning" className="text-center">
                     Nenhuma task para mostrar hoje
