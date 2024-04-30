@@ -22,10 +22,10 @@ The backend was also developed and you can find it on my github profile. IT MUST
 To run this application you'll need a up and running Auth0 application. Create a **.env** file with the following structure
 
 ```js
-VITE_AUTH0_DOMAIN = yourAuth0DomainHere;
-VITE_AUTH0_CLIENT_ID = yourAuth0ClientIdHere;
-VITE_AUTH0_AUDIENCE = yourApiAudience;
-VITE_API_URL = theApiUrlRunning;
+VITE_AUTH0_DOMAIN = yourAuth0DomainHere
+VITE_AUTH0_CLIENT_ID = yourAuth0ClientIdHere
+VITE_AUTH0_AUDIENCE = yourApiAudience
+VITE_API_URL = theApiUrlRunning
 ```
 
 You'll need to create an api in the Auth0 dashboard to be able to get the AUTH0 audience. Otherwise, all the token generated will be opaque and the api will not be able to authenticate the user
