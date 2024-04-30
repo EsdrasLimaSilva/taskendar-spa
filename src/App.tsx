@@ -63,8 +63,10 @@ export default function App() {
         return (
             <main className="flex h-screen items-center justify-center px-2">
                 <p className="text-center text-lg">
-                    Something wen wrong, make sure Auth0 is correctly setup and
-                    the backend application is running
+                    Aguarde um pouco, estamos preparando tudo. Se essa página
+                    demorar muito tempo ou não mudar, alguma coisa deu errado.
+                    Verifique se Auth0 está configurado corretamente e a
+                    aplicação backend está functionando.
                 </p>
             </main>
         );

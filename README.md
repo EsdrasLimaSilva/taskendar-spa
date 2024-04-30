@@ -39,6 +39,8 @@ So **VITE_AUTH0_AUDIENCE** will be the one set up in the API, and the **VITE_AUT
 -   dashboard > Applications > Applications
 -   dashboard > Applications > APIs
 
+Make sure to connect both Authentication methods, application and the api, and to set correctly the Allowed callbacks to the application work properly.
+
 **_ALL THE AUTH INFORMATION MUST MATCH THE ONES PROVIDED IN THE BACKEND APPLICATION_**
 
 ### How to run
