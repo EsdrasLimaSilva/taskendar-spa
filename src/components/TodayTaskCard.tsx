@@ -17,13 +17,18 @@ export default function TodayTaskCard({ task }: Props) {
 
     return (
         <article className="task-card flex flex-col gap-6">
-            <header className="flex w-full flex-row items-end justify-between">
-                <h2 className="w-ful text-3xl">{task.title}</h2>
-                <h3 className="rounded-md bg-neutral-400 px-4 py-2 text-lg font-bold text-neutral-50">
-                    {startsAt.getHours()}:
+            <header className="flex w-full flex-row items-end justify-between gap-2">
+                <div>
+                    <h2 className="w-ful text-3xl">{task.title}</h2>
+                </div>
+                <h3 className="w-24 rounded-md bg-neutral-400 px-4 py-2 text-center text-lg font-bold text-neutral-50">
+                    {startsAt.getHours().toString().padStart(2, "0")}:
                     {startsAt.getMinutes().toString().padStart(2, "0")}h
                 </h3>
             </header>
+            <span
+                className={` block h-2 w-full rounded-full ${task.done ? " bg-success-500" : "bg-warning-500"}`}
+            />
             <main>
                 <p className="text-justify text-lg">{task.description}</p>
             </main>
