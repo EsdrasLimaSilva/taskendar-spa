@@ -1,5 +1,6 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
+    changeTaskDoneState,
     createTask,
     deleteTask,
     getTasks,
@@ -67,6 +68,11 @@ interface StateType {
         today: boolean;
         others: boolean;
     };
+
+    updatingTaskDoneState: {
+        taskId: string;
+        loading: boolean;
+    };
 }
 
 const initialState: StateType = {
@@ -98,6 +104,11 @@ const initialState: StateType = {
     loadingTasks: {
         today: true,
         others: true,
+    },
+
+    updatingTaskDoneState: {
+        taskId: "",
+        loading: false,
     },
 };
 /*============ Async Thunks ============*/
@@ -151,6 +162,22 @@ export const updateTaskThunk = createAsyncThunk(
     async ({ task, token }: { task: UpdateTaskType; token: string }) => {
         const updatedTask = await updateTask(task, token);
         return updatedTask;
+    },
+);
+
+export const updateTaskDoneStateThunk = createAsyncThunk(
+    "tasks/updateTaskDoneState",
+    async ({
+        taskId,
+        done,
+        token,
+    }: {
+        taskId: string;
+        done: boolean;
+        token: string;
+    }) => {
+        const taskWasUpdated = await changeTaskDoneState(taskId, done, token);
+        return taskWasUpdated;
     },
 );
 
@@ -269,6 +296,11 @@ const tasksSlice = createSlice({
             state.loadingTasks.others = true;
         });
 
+        builder.addCase(updateTaskDoneStateThunk.pending, (state, { meta }) => {
+            state.updatingTaskDoneState.loading = true;
+            state.updatingTaskDoneState.taskId = meta.arg.taskId;
+        });
+
         builder.addCase(deleteTaskThunk.pending, (state) => {
             state.loadingTasks.today = true;
             state.loadingTasks.others = true;
@@ -338,6 +370,39 @@ const tasksSlice = createSlice({
             state.loadingTasks.today = false;
             state.loadingTasks.others = false;
         });
+
+        builder.addCase(
+            updateTaskDoneStateThunk.fulfilled,
+            (state, { meta, payload }) => {
+                const taskWasUpdated = payload;
+
+                if (taskWasUpdated) {
+                    const tskIndexToday = state.taskList.today.findIndex(
+                        (tsk) => tsk._id === meta.arg.taskId,
+                    );
+                    const tskIndexOther = state.taskList.others.findIndex(
+                        (tsk) => tsk._id === meta.arg.taskId,
+                    );
+                    const tskIndexSearch = state.search.tasks.findIndex(
+                        (tsk) => tsk._id === meta.arg.taskId,
+                    );
+
+                    if (tskIndexToday >= 0) {
+                        state.taskList.today[tskIndexToday].done =
+                            meta.arg.done;
+                    } else if (tskIndexOther >= 0) {
+                        state.taskList.others[tskIndexOther].done =
+                            meta.arg.done;
+                    } else if (tskIndexSearch >= 0) {
+                        state.taskList.today[tskIndexSearch].done =
+                            meta.arg.done;
+                    }
+                }
+
+                state.updatingTaskDoneState.loading = false;
+                state.updatingTaskDoneState.taskId = "";
+            },
+        );
 
         // delete task
         builder.addCase(deleteTaskThunk.fulfilled, (state, action) => {

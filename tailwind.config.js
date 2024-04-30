@@ -28,7 +28,7 @@ export default {
                 },
 
                 warning: {
-                    500: "#F8CB2D",
+                    500: "#F4BF00",
                 },
 
                 action: {
